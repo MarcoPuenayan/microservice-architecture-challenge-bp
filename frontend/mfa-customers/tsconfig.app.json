@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [],
+    "target": "ES2022"
+  },
+  "files": ["src/main.ts", "src/polyfills.ts", "src/app/mf.module.ts","src/app/pages/share-example/share.component.ts"],
+  "include": ["src/**/*.d.ts"]
+}

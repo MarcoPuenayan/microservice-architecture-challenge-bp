@@ -1,0 +1,134 @@
+<div class="row no-gutters">
+  <section
+    class="section-form container container-template d-flex justify-content-center"
+  >
+    <div style="width: 500px" class="d-flex flex-column gap-3">
+      <pichincha-typography
+        variant="prelo-slab"
+        color="bp-primary-blue500"
+        weight="400"
+        size="32px"
+        line-height="40px"
+        decoration="none"
+        category="h1"
+      >
+        Registrar Cuenta
+      </pichincha-typography>
+
+      <!-- Success Modal -->
+      <div *ngIf="successMessage" class="modal-overlay">
+        <div class="success-modal">
+          <div class="modal-header">
+            <h4>✅ Éxito</h4>
+          </div>
+          <div class="modal-body">
+            <p>{{ successMessage }}</p>
+          </div>
+          <div class="modal-footer">
+            <pichincha-button
+              (clickEvent)="navigateListPage()"
+              size="medium"
+              label="Ir al listado"
+            ></pichincha-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form
+        id="registerAccountForm"
+        class="d-flex flex-column gap-3"
+        [formGroup]="registerForm"
+      >
+        <!--#region Account Number -->
+        <pichincha-input
+          id="inputAccountNumber"
+          label="Número de Cuenta"
+          formControlName="accountNumber"
+          placeholder="Ingrese 6 dígitos"
+          maxlength="6"
+          inputType="number"
+          state="{{ accountNumber.invalid && accountNumber.touched ? 'error' : undefined }}"
+          errorHelper="Debe ingresar exactamente 6 dígitos numéricos"
+        ></pichincha-input>
+        <!--#endregion-->
+
+        <!--#region Account Type -->
+        <div class="form-group">
+          <label for="accountTypeId">Tipo de Cuenta</label>
+          <select 
+            id="accountTypeId"
+            class="form-control"
+            formControlName="accountTypeId"
+            [class.is-invalid]="accountTypeId.invalid && accountTypeId.touched"
+          >
+            <option value="" disabled>Seleccione el tipo de cuenta</option>
+            <option *ngFor="let type of accountTypes" [value]="type.id">
+              {{ type.description }}
+            </option>
+          </select>
+          <div *ngIf="accountTypeId.invalid && accountTypeId.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+        <!--#endregion-->
+
+        <!--#region Initial Balance -->
+        <pichincha-input
+          label="Saldo Inicial"
+          formControlName="initialBalance"
+          placeholder="Ej: 1000.50"
+          inputType="number"
+          step="0.01"
+          min="0"
+          state="{{ initialBalance.invalid && initialBalance.touched ? 'error' : undefined }}"
+          errorHelper="Campo requerido (debe ser mayor o igual a 0)"
+        ></pichincha-input>
+        <!--#endregion-->
+
+        <!--#region Customer -->
+        <div class="form-group">
+          <label for="customerId">Cliente</label>
+          <select 
+            id="customerId"
+            class="form-control"
+            formControlName="customerId"
+            [class.is-invalid]="customerId.invalid && customerId.touched"
+          >
+            <option value="" disabled>Seleccione un cliente</option>
+            <option *ngFor="let customer of customers" [value]="customer.customerId">
+              {{ customer.name }} - {{ customer.identification }}
+            </option>
+          </select>
+          <div *ngIf="customerId.invalid && customerId.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+        <!--#endregion-->
+
+        <div class="w-100 d-flex justify-content-end mt-3 gap-10">
+          <pichincha-button
+            (clickEvent)="resetForm()"
+            type="button"
+            size="large"
+            variant="secondary"
+            customWidth="200px"
+            label="Cancelar"
+          ></pichincha-button>
+          <pichincha-button
+            (clickEvent)="onSubmit()"
+            type="button"
+            size="large"
+            customWidth="200px"
+            label="Registrar Cuenta"
+            [disabled]="isLoading || registerForm.invalid"
+          ></pichincha-button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

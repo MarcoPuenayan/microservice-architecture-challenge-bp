@@ -1,0 +1,237 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+    id 'jacoco'
+	id 'java'
+	id 'org.springframework.boot' version '3.3.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.9.0'
+    id 'info.solidsoft.pitest' version '1.15.0'
+} 
+
+def packageName = "com.pichincha.account.transaction"
+
+springBoot {
+	mainClass = "${packageName}.OptimusMainApplication"
+}
+
+
+group = "com.pichincha.account"
+version = "1.0.1"
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://pkgs.dev.azure.com/BancoPichinchaEC/0f20bf47-c965-46fe-8bd4-91df57fbb2e7/_packaging/Framework/maven/v1"
+        name "BancoPichinchaEC"
+        credentials {
+            username System.getenv("ARTIFACT_USERNAME")
+            password System.getenv("ARTIFACT_TOKEN")
+        }
+    }    
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
+    }
+}
+
+ext {
+}
+
+
+dependencies {
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    //dependency Base
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //dependencies for default
+    
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // PostgreSQL
+    implementation 'org.postgresql:postgresql:42.7.3'
+    // Pageable
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // MapStruct
+    implementation group: "org.mapstruct", name: "mapstruct", version: "1.5.5.Final"
+    annotationProcessor group: "org.mapstruct", name: "mapstruct-processor", version: "1.5.5.Final"
+    // Libreria para manejo de errores
+    implementation 'com.pichincha.common:lib-error-detail-sb3:1.4.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    // PDF
+    implementation 'com.github.librepdf:openpdf:1.3.30'
+    // Cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    // Cache: caffeine
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    // Log en JSON
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    // Log transaccional & auditoria
+    implementation 'com.pichincha.common:lib-transac-log-mvc-sb3:1.12.0'
+    implementation 'com.pichincha.common:optimus-loggerauditor-mvc:1.2.0'
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    //Eureka
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    // OAuth2 Resource Server
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+    // dependency from optimus
+
+    //dependencias para redis
+    
+
+    //dependencias para circuit breaker
+    
+
+    //dependencias feing o web client
+    
+
+    //dependencias graphql
+    
+	
+
+	//libs optimus
+	
+	
+	
+    //test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "io.projectreactor:reactor-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.xmlunit:xmlunit-core:2.10.0"
+}
+
+
+tasks.register('buildSpringServer', GenerateTask) {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/openapi.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "${packageName}.infrastructure.input.adapter.rest"
+    modelPackage = "${packageName}.infrastructure.input.adapter.rest.models"
+    library = "spring-boot"
+    configOptions = [
+      useSpringBoot3                          : "true",
+      useJakartaEe                            : "true",
+      serializableModel                       : "true",
+      dateLibrary                             : "java8",
+      openApiNullable                         : "false",
+      apiFirst                                : "false",
+      delegatePattern                         : "true",
+      configPackage                           : "${packageName}.config",
+      sourceFolder                            : "src/main/java",
+      basePackage                             : "${packageName}",
+      disallowAdditionalPropertiesIfNotPresent: "true",
+      interfaceOnly                           : "true"
+]
+}
+
+tasks.register('buildSpringAccount', GenerateTask) {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/openapi-account.yaml".toString()
+    outputDir = "$buildDir/generated-account".toString()
+    apiPackage = "com.pichincha.account.accounts.api"
+    modelPackage = "com.pichincha.account.accounts.models"
+    invokerPackage = "com.pichincha.account.accounts.invoker"
+    library = "spring-cloud"
+    configOptions = [
+            useSpringBoot3                          : "true",
+            useFeignClients                         : "true",
+            dateLibrary                             : "java8",
+            useJakartaEe                            : "true",
+            openApiNullable                         : "false",
+            configPackage                           : "com.pichincha.config",
+            sourceFolder                            : "src/main/java",
+    ]
+
+}
+ 
+
+tasks.register('optimusCreateUnitTest', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "com.pichincha.test.core.ProcessMain"
+}
+
+compileJava {
+     dependsOn buildSpringServer, buildSpringAccount
+    options.compilerArgs += [
+            "-Amapstruct.suppressGeneratorTimestamp=true",
+            "-Amapstruct.suppressGeneratorVersionInfoComment=true",
+            "-Amapstruct.verbose=true",
+            "-Amapstruct.defaultComponentModel=spring"
+    ]
+}
+ 
+sourceSets.main.java.srcDirs = ["$buildDir/generated/src/main/java",
+                                "$buildDir/generated-account/src/main/java", "src/main/java"]
+
+springBoot{
+    buildInfo() 
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+pitest {
+    targetClasses = [
+            'com.pichincha.account.transaction.application.service.*',
+            'com.pichincha.account.transaction.infrastructure.input.adapter.rest.impl.*',
+            'com.pichincha.account.transaction.infrastructure.output.repository.*'
+    ]
+    excludedClasses = [
+            'com.pichincha.account.transaction.service.application.ApiUtil',
+            'com.pichincha.account.transaction.controller.application.ApiUtil',
+            'com.pichincha.account.transaction.service.application.models.*',
+            'com.pichincha.account.transaction.service.application.dto.*',
+            'com.pichincha.account.transaction.service.application.mapper.*'
+    ]
+
+    targetTests = ['com.pichincha.account.transaction.*']
+    threads = 4
+    outputFormats = ['HTML']
+    junit5PluginVersion = '1.2.1'
+    useClasspathFile = true
+    mutationThreshold = 45
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        xml.destination file("$buildDir/jacoco/test.xml")
+        html.destination file("$buildDir/jacoco/index.html")
+        html.required = true
+        csv.required = true
+    }
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('pitest')
+}

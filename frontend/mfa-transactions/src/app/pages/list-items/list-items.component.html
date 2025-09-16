@@ -1,0 +1,148 @@
+<div class="container">
+  <pichincha-typography
+    variant="prelo-slab"
+    color="bp-primary-blue500"
+    weight="400"
+    size="32px"
+    line-height="40px"
+    decoration="none"
+    category="h1"
+  >
+    Transacciones de Cuentas
+  </pichincha-typography>
+
+  <!-- Success Message -->
+  <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>¡Éxito!</strong> Transacción eliminada correctamente.
+    <button type="button" class="btn-close" aria-label="Close" (click)="showSuccessMessage = false"></button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="showErrorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>¡Error!</strong> {{ errorMessage }}
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorMessage()"></button>
+  </div>
+
+  <section>
+    <div class="d-flex justify-content-end">
+      <pichincha-button
+        size="large"
+        id="button"
+        (clickEvent)="newItem()"
+        customWidth="200px"
+        label="Nueva Transaccion"
+        [disabled]="isPermissionError"
+      ></pichincha-button>
+    </div>
+
+    <div class="container-table mt-4">
+      <pichincha-table
+        [headers]="tableHeaders"
+        [rows]="itemss"
+        [actions]="tableActions"
+      ></pichincha-table>
+    </div>
+  </section>
+
+  <!-- Confirmation Modal -->
+  <div *ngIf="showConfirmModal" class="modal fade show d-block" 
+       tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" 
+       aria-hidden="false" style="z-index: 1050;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
+          <button type="button" class="btn-close" aria-label="Close" 
+                  (click)="closeConfirmModal()" [disabled]="isDeleting"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Está seguro que desea eliminar esta transacción?</p>
+        </div>
+        <div class="modal-footer">
+          <pichincha-button
+            (clickEvent)="closeConfirmModal()"
+            size="large"
+            variant="secondary"
+            customWidth="100px"
+            label="No"
+            [disabled]="isDeleting">
+          </pichincha-button>
+          <pichincha-button
+            (clickEvent)="confirmDelete()"
+            size="large"
+            variant="primary"
+            customWidth="100px"
+            [label]="isDeleting ? 'Eliminando...' : 'Sí'"
+            [disabled]="isDeleting">
+          </pichincha-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div *ngIf="showConfirmModal" class="modal-backdrop fade show" style="z-index: 1040;"></div>
+
+  <!-- No Data Modal -->
+  <div *ngIf="showNoDataModal" class="modal fade show d-block" 
+       tabindex="-1" role="dialog" aria-labelledby="noDataModalLabel" 
+       aria-hidden="false" style="z-index: 1050;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="noDataModalLabel">Información</h5>
+          <button type="button" class="btn-close" aria-label="Close" 
+                  (click)="closeNoDataModal()"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="fas fa-info-circle fa-3x text-info mb-3"></i>
+          <p class="mb-0"><strong>NO EXISTEN TRANSACCIONES POR MOSTRAR</strong></p>
+          <p class="text-muted">No se encontraron transacciones para mostrar en este momento.</p>
+        </div>
+        <div class="modal-footer">
+          <pichincha-button
+            (clickEvent)="closeNoDataModal()"
+            size="large"
+            variant="primary"
+            customWidth="100px"
+            label="Entendido">
+          </pichincha-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data Modal backdrop -->
+  <div *ngIf="showNoDataModal" class="modal-backdrop fade show" style="z-index: 1040;"></div>
+
+  <!-- Error Modal -->
+  <div *ngIf="showErrorModal" class="modal fade show d-block" 
+       tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" 
+       aria-hidden="false" style="z-index: 1050;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Alerta</h5>
+          <button type="button" class="btn-close" aria-label="Close" 
+                  (click)="closeErrorModal()"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+          <p class="mb-0"><strong>{{ modalMessage }}</strong></p>
+        </div>
+        <div class="modal-footer">
+          <pichincha-button
+            (clickEvent)="closeErrorModal()"
+            size="large"
+            variant="primary"
+            customWidth="100px"
+            label="Aceptar">
+          </pichincha-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal backdrop -->
+  <div *ngIf="showErrorModal" class="modal-backdrop fade show" style="z-index: 1040;"></div>
+</div>

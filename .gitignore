@@ -1,0 +1,173 @@
+###############################################
+# Root .gitignore for Multi-Module Project
+# Backend: Java / Spring Boot / Gradle microservices
+# Frontend: Angular workspaces
+# OS / IDE / Tooling artifacts
+###############################################
+
+###############
+# Global ignores
+###############
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Archives / Packs
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+*.rej
+*.log
+
+# Credentials / Environment
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+*.cer
+*.crt
+*.der
+secrets*/
+
+###############################################
+# Backend (Gradle / Java)
+###############################################
+# Build output
+backend/**/build/
+backend/**/out/
+backend/**/bin/
+
+# Gradle caches & metadata
+.gradle/
+**/.gradle/
+.backend-cache/
+
+# Logs (keep folder structure, ignore contents)
+backend/**/logs/*
+!backend/**/logs/.gitkeep
+
+# Spring specific runtime files
+backend/**/target/
+
+# IntelliJ / Eclipse / VS Code
+*.iml
+.idea/
+**/.idea/
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# Jacoco / Coverage / Reports
+**/jacoco.exec
+**/jacocoTest.exec
+**/build/reports/
+**/coverage/
+
+# Generated sources (if any)
+**/generated/
+
+# Heap / crash dumps
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# Exclude wrapper distributions except the JAR kept under version control
+# (Gradle wrapper JAR SHOULD be committed; do not ignore it.)
+# Keep gradlew / gradlew.bat scripts
+
+###############################################
+# Frontend (Angular / Node)
+###############################################
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/dist-ssr/
+frontend/**/.angular/
+frontend/**/.nx/
+frontend/**/.turbo/
+frontend/**/.parcel-cache/
+frontend/**/.cache/
+frontend/**/.eslintcache
+frontend/**/coverage/
+frontend/**/tmp/
+frontend/**/reports/
+frontend/**/storybook-static/
+
+# Lock & debug artifacts (keep the main lockfiles if desired - uncomment to ignore)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Logs
+frontend/**/npm-debug.log*
+frontend/**/yarn-debug.log*
+frontend/**/yarn-error.log*
+frontend/**/pnpm-debug.log*
+
+# Environment / config overrides (Angular, Node)
+frontend/**/.env
+frontend/**/.env.*
+frontend/**/src/environments/*.local.ts
+
+###############################################
+# Tooling / Containers / CI
+###############################################
+# Docker build cache / intermediate
+**/docker-cache/
+*.pid
+
+# Helm chart build outputs (retain source templates)
+backend/**/helm/**/charts/*
+!backend/**/helm/**/charts/.gitkeep
+
+# Sonar / Analysis
+.sonar/
+.scannerwork/
+
+###############################################
+# Miscellaneous
+###############################################
+# IDE workspace backups
+*.code-workspace.backup
+
+# Generated documentation
+**/docs/generated/
+**/compodoc/
+
+# Coverage aggregate
+coverage/
+
+# Local test data
+**/test-output/
+**/local-data/
+
+###############################################
+# Exceptions (force include) - uncomment if needed
+# !gradle/wrapper/gradle-wrapper.jar
+# !**/stackhawk*.yml
+
+###############################################
+# Git keepers
+###############################################
+# If you rely on keeping empty dirs, place a .gitkeep file in them.
+
+# End of file

@@ -1,0 +1,164 @@
+<div class="row no-gutters">
+  <section
+    class="section-form container container-template d-flex justify-content-center"
+  >
+    <form
+      id="registerCustomerForm"
+      style="width: 500px"
+      class="d-flex flex-column gap-3"
+      [formGroup]="registerForm"
+    >
+      <pichincha-typography
+        variant="prelo-slab"
+        color="bp-primary-blue500"
+        weight="400"
+        size="32px"
+        line-height="40px"
+        decoration="none"
+        category="h1"
+      >
+        {{ editForm ? "Editar" : "Registrar" }} Cliente
+      </pichincha-typography>
+
+      <!--#region Name -->
+      <pichincha-input
+        id="inputName"
+        label="Nombre completo"
+        formControlName="name"
+        placeholder="Ej: Marco Puenayan"
+        appLettersOnly
+        state="{{ name.invalid && name.touched ? 'error' : undefined }}"
+        errorHelper="{{
+          name.touched && name.errors?.['required'] ? 'Campo requerido' :
+          name.touched && name.errors?.['pattern'] ? 'Solo se permiten letras y espacios' : ''
+        }}"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Gender -->
+      <div class="form-group">
+        <label for="gender">Género</label>
+        <select 
+          id="gender"
+          class="form-control"
+          formControlName="gender"
+          [class.is-invalid]="gender.invalid && gender.touched"
+        >
+          <option value="">Seleccione el género</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Femenino">Femenino</option>
+        </select>
+        <div *ngIf="gender.invalid && gender.touched" class="invalid-feedback">
+          Campo requerido
+        </div>
+      </div>
+      <!--#endregion-->
+
+      <!--#region Identification -->
+      <pichincha-input
+        label="Cédula"
+        formControlName="identification"
+        placeholder="Ej: 0956298477"
+        maxlength="10"
+        appNumberOnly
+        [disabled]="editForm"
+        state="{{ identification.invalid && identification.touched ? 'error' : undefined }}"
+        errorHelper="{{
+          identification.touched && identification.errors?.['required'] ? 'Campo requerido' :
+          identification.touched && identification.errors?.['pattern'] ? 'Debe ingresar exactamente 10 dígitos' : ''
+        }}"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Age -->
+      <pichincha-input
+        label="Edad"
+        type="number"
+        formControlName="age"
+        placeholder="Ej: 28"
+        maxlength="3"
+        appNumberOnly
+        state="{{ age.invalid && age.touched ? 'error' : undefined }}"
+        errorHelper="{{
+          age.touched && age.errors?.['required'] ? 'Campo requerido' :
+          age.touched && age.errors?.['min'] ? 'La edad mínima es 18 años' :
+          age.touched && age.errors?.['max'] ? 'La edad máxima es 999 años' :
+          age.touched && age.errors?.['pattern'] ? 'Solo se permiten números' : ''
+        }}"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Address -->
+      <pichincha-input
+        label="Dirección"
+        formControlName="address"
+        placeholder="Ej: Norte"
+        state="{{ address.invalid && address.touched ? 'error' : undefined }}"
+        errorHelper="Campo requerido"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Phone -->
+      <pichincha-input
+        label="Teléfono"
+        formControlName="phone"
+        placeholder="Ej: 0979847154"
+        maxlength="10"
+        appNumberOnly
+        state="{{ phone.invalid && phone.touched ? 'error' : undefined }}"
+        errorHelper="{{
+          phone.touched && phone.errors?.['required'] ? 'Campo requerido' :
+          phone.touched && phone.errors?.['pattern'] ? 'Debe ingresar entre 7 y 10 dígitos' : ''
+        }}"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Password - Solo para creación -->
+      <pichincha-input
+        *ngIf="!editForm"
+        label="Contraseña"
+        type="password"
+        formControlName="password"
+        placeholder="Ingrese una contraseña"
+        state="{{ password && password.invalid && password.touched ? 'error' : undefined }}"
+        errorHelper="Campo requerido"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Status -->
+      <div class="form-group">
+        <label for="status">Estado</label>
+        <select 
+          id="status"
+          class="form-control"
+          formControlName="status"
+          [class.is-invalid]="status.invalid && status.touched"
+        >
+          <option value="">Seleccione el estado</option>
+          <option [value]="true">Activo</option>
+          <option [value]="false">Inactivo</option>
+        </select>
+        <div *ngIf="status.invalid && status.touched" class="invalid-feedback">
+          Campo requerido
+        </div>
+      </div>
+      <!--#endregion-->
+
+      <div class="w-100 d-flex justify-content-end mt-3 gap-10">
+        <pichincha-button
+          (clickEvent)="resetForm()"
+          size="large"
+          variant="secondary"
+          customWidth="200px"
+          label="Cancelar"
+        ></pichincha-button>
+        <pichincha-button
+          (clickEvent)="onSubmit()"
+          size="large"
+          customWidth="200px"
+          label="{{ editForm ? 'Editar' : 'Registrar' }}"
+        ></pichincha-button>
+      </div>
+    </form>
+  </section>
+</div>

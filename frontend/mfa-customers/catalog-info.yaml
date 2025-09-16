@@ -1,0 +1,33 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  namespace: default
+  name: mfa-customers
+  description: #description-product#
+  tags:
+    - web
+    - micro-frontend
+    - shell
+    - angular
+
+  links:
+    - url: #link-repository#
+      icon: link
+      title: Website
+
+    - url: https://pichincha.atlassian.net/wiki #Actualizar el link de la documentación tectica
+      icon: link
+      title: Documentación Técnica
+
+  annotations:
+    dev.azure.com/project-repo: BP-Chapter-Backend-Frontend/mfa-customers
+    sonarqube.org/project-key: 96df633c-6f1a-4095-a272-819141d75c0e #Actualizar con el projectKey de Sonar
+
+spec:
+  type: mfa
+  owner: default
+  system: default #Actualizar sistema que corresponda
+  dependsOn:
+    - component:mfa-customers #Actualizar dependencias caso contrario eliminar
+  domain: Optimus #Actualizar con el dominio del negocio
+  lifecycle: development #Actualizar ambiente

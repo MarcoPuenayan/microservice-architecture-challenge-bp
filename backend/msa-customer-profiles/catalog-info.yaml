@@ -1,0 +1,42 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  namespace: default
+  name: msa-customer-profiles
+  description: <sup>(ES)</sup> Microservicio que permite realizar el CRUD de un cliente. <br><br>
+<sup>(EN)</sup> Microservice that allows performing CRUD operations on a client. <br><br>
+
+  tags:
+    - dominio-bian
+    - subdominio-bian
+    - tecnologia
+    - celula-multicore
+    - multicore
+    - capa-ddd
+ 
+  links:
+  - url: https://teams.microsoft.com/l/message/19:meeting_NDRkYWQ5ODctOGIxYy00MWVjLTk1NTYtNzhjZjg5NDBmNTll@thread.v2/1707943487928?context=%7B%22contextType%22%3A%22chat%22%7D #Autualizar con el link del repositorio
+    icon: link
+    title: Website
+  - url: https://app.swaggerhub.com/apis/Banco-Pichincha7/#api-dm-customer-contact-information-v1/1.0.0 #Autualizar el link del contrato en swagger hub
+    icon: DataObject
+    title: OpenApi
+  - url: https://pichincha.atlassian.net/wiki/spaces/#CDSRL/pages/2808054060/Documentaci+n+T+cnica+de+Desarrollo+de+Software #Actualizar el link de la documentación tectica
+    icon: link
+    title: DocumentacionTecnica
+ 
+  annotations:
+    dev.azure.com/project-repo: /msa-customer-profiles #Actualizar nombre del proyecto/nombre del repositorio
+    dynatrace.com/dynatrace-entity-id: SERVICE-C239FA30AC6CB3A1 #Actualizar con el identificador de dynatrece
+    sonarcloud.io/project-key: 96df633c-6f1a-4095-a272-819141d75c0e #Actualizar con el projectKey de Sonar
+ 
+spec:
+  type: openapi
+  owner: mpuenaya@pichincha.com
+  system: frm-cli-optimusframework #Actualizar sistema que corresponda
+  dependsOn:
+    - component:frm-spa-optimus-core #Actualizar dependencias caso contrario eliminar
+  domain: Optimus #Actualizar con el dominio del negocio
+  lifecycle: development #Actualizar ambiente
+  definition:
+    $text: https://dev.azure.com/BancoPichinchaEC/arq-framework/_git/frm-msa-optimus-core?path=/src/main/resources/openapi.yaml&version=GBdevelop #Actualizar la url de OPEN API  

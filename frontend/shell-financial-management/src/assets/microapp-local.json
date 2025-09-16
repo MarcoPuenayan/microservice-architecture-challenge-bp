@@ -1,0 +1,28 @@
+[ {
+  "layout" : "dashboard",
+  "fwr" : "angular",
+  "urlResource" : "http://localhost:0/mfa-customers/remoteEntry.js",
+  "scope" : "customers",
+  "name" : "mf_customers_app",
+  "type" : "module",
+  "exposedModule" : "./mf_customers_app",
+  "guards" : [ ]
+}, {
+  "layout" : "dashboard",
+  "fwr" : "angular",
+  "urlResource" : "http://localhost:0/mfa-accounts/remoteEntry.js",
+  "scope" : "accounts",
+  "name" : "mf_accounts_app",
+  "type" : "module",
+  "exposedModule" : "./mf_accounts_app",
+  "guards" : [ ]
+}, {
+  "layout" : "dashboard",
+  "fwr" : "angular",
+  "urlResource" : "http://localhost:0/mfa-transactions/remoteEntry.js",
+  "scope" : "transactions",
+  "name" : "mf_transactions_app",
+  "type" : "module",
+  "exposedModule" : "./mf_transactions_app",
+  "guards" : [ ]
+} ]

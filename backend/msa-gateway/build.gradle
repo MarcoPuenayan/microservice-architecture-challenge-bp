@@ -1,0 +1,155 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+    id 'jacoco'
+	id 'java'
+	id 'org.springframework.boot' version '3.3.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.9.0'
+} 
+
+def packageName = "com.pichincha.gateway"
+
+springBoot {
+	mainClass = "${packageName}.OptimusMainApplication"
+}
+
+
+group = "com.pichincha.gateway"
+version = "1.0.1"
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://pkgs.dev.azure.com/BancoPichinchaEC/0f20bf47-c965-46fe-8bd4-91df57fbb2e7/_packaging/Framework/maven/v1"
+        name "BancoPichinchaEC"
+        credentials {
+            username System.getenv("ARTIFACT_USERNAME")
+            password System.getenv("ARTIFACT_TOKEN")
+        }
+    }    
+} 
+
+ext {
+}
+
+
+dependencies {
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    //dependency Base
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //dependencies for default
+    
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+
+    // dependency from optimus
+
+    //dependencias para redis
+    
+
+    //dependencias para circuit breaker
+    
+
+    //dependencias feing o web client
+    
+
+    //dependencias graphql
+    
+	
+
+	//libs optimus
+	
+	
+	
+    //test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "io.projectreactor:reactor-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.xmlunit:xmlunit-core:2.10.0"
+}
+
+
+tasks.register('buildSpringServer', GenerateTask) {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/openapi.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "${packageName}.infrastructure.input.adapter.rest"
+    modelPackage = "${packageName}.infrastructure.input.adapter.rest.models"
+    library = "spring-boot"
+    configOptions = [
+      useSpringBoot3                          : "true",
+      useJakartaEe                            : "true",
+      serializableModel                       : "true",
+      dateLibrary                             : "java8",
+      openApiNullable                         : "false",
+      apiFirst                                : "false",
+      delegatePattern                         : "true",
+      configPackage                           : "${packageName}.config",
+      sourceFolder                            : "src/main/java",
+      basePackage                             : "${packageName}",
+      disallowAdditionalPropertiesIfNotPresent: "true",
+      interfaceOnly                           : "true"
+]
+}
+
+
+ 
+
+tasks.register('optimusCreateUnitTest', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "com.pichincha.test.core.ProcessMain"
+}
+
+compileJava {
+     dependsOn buildSpringServer 
+    options.compilerArgs += [
+            "-Amapstruct.suppressGeneratorTimestamp=true",
+            "-Amapstruct.suppressGeneratorVersionInfoComment=true",
+            "-Amapstruct.verbose=true",
+            "-Amapstruct.defaultComponentModel=spring"
+    ]
+}
+ 
+sourceSets.main.java.srcDirs = ["$buildDir/generated/src/main/java", "src/main/java"]
+
+springBoot{
+    buildInfo() 
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        xml.destination file("$buildDir/jacoco/test.xml")
+        html.destination file("$buildDir/jacoco/index.html")
+        html.required = true
+        csv.required = true
+    }
+}

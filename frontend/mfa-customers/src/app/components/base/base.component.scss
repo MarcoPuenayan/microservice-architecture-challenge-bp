@@ -1,0 +1,19 @@
+/*
+* no component-wide styles
+*/
+
+@import '../../../assets/bootstrap-grid.min.css';
+
+.gap {
+  &-10 {
+    gap: 10px;
+  }
+
+  &-20 {
+    gap: 20px;
+  }
+
+  &-30 {
+    gap: 30px;
+  }
+}

@@ -1,0 +1,177 @@
+##### Esto es editable por el programador ##########
+variables:
+  own:
+    file:
+      - name: "nginx.conf"
+        value: |-
+          user  nginx;
+          worker_processes 2;
+          error_log  /var/log/nginx/error.log notice;
+          pid        /var/run/nginx.pid;
+
+          events {
+              worker_connections  1024;
+          }
+
+          http {
+              server_tokens off;
+              add_header X-Frame-Options SAMEORIGIN;
+              add_header Cache-Control "no-store, no-cache, must-revalidate";
+              add_header Pragma no-cache;
+              add_header Content-Security-Policy "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.pichincha.com https://www.googleadservices.com https://detectca.easysol.net https://connect.facebook.net https://www.facebook.com https://www.googletagmanager.com https://*.hotjar.com https://*.hotjar.io wss://*.hotjar.com https://www.google-analytics.com https://*.google.com https://*.gstatic.com https://www.recaptcha.net http://34.120.46.84; img-src 'self' https://googleads.g.doubleclick.net https://detectca.easysol.net https://www.google-analytics.com https://*.gstatic.com https://stats.g.doubleclick.net https://*.hotjar.com https://*.hotjar.io https://*.google.com https://www.facebook.com https://www.google.com.ec https://www.googletagmanager.com http://34.120.46.84; connect-src https://*.pichincha.com https://detectca.easysol.net https://*.hotjar.com https://*.hotjar.io wss://*.hotjar.com https://www.google-analytics.com https://stats.g.doubleclick.net https://storage.googleapis.com https://connect.facebook.net https://www.googletagmanager.com https://www.recaptcha.net https://www.facebook.com https://desarrollo-agro.pichincha.com";
+              add_header X-Forwarded-For $http_x_forwarded_for;
+              add_header X-Remote-IP $remote_addr;
+
+              ### Headers TCS
+              add_header x-crd-channel-id "02";
+              add_header x-crd-medium-id "020007";
+              add_header x-crd-application-id "00695";
+
+              ignore_invalid_headers on;
+              fastcgi_read_timeout 300;
+              proxy_read_timeout 300;
+
+              # Get the actual IP of the client through load balancer in the logs
+              real_ip_header     X-Forwarded-For;
+              set_real_ip_from   0.0.0.0/0;
+
+              # X-Frame-Options is to prevent from clickJacking attack
+              add_header X-Frame-Options SAMEORIGIN;
+
+              # disable content-type sniffing on some browsers.
+              add_header X-Content-Type-Options nosniff;
+
+              # This header enables the Cross-site scripting (XSS) filter
+              add_header X-XSS-Protection "1; mode=block";
+
+              # This will enforce HTTP browsing into HTTPS and avoid ssl stripping attack
+              add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
+
+              # Enables response header of "Vary: Accept-Encoding"
+              gzip_vary on;
+
+              add_header Set-Cookie "Path=/; HttpOnly; Secure";
+
+
+              include       /etc/nginx/mime.types;
+              default_type  application/octet-stream;
+              log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                                '$status $body_bytes_sent "$http_referer" '
+                                '"$http_user_agent" "$http_x_forwarded_for"';
+
+              access_log  /var/log/nginx/access.log  main;
+              sendfile        on;
+              #tcp_nopush     on;
+              keepalive_timeout  65;
+              #gzip  on;
+              include /etc/nginx/conf.d/*.conf;
+
+              server {
+                  listen 80 default_server;
+                  index index.html;
+                  rewrite_log on;
+                  error_log /var/log/nginx/localhost.error_log notice;
+
+                  location / {
+                    types { } default_type "text/html; charset=utf-8";
+                    return 404;
+                  }
+
+                  location /health {
+                    types {}
+                    default_type "text/plain; charset=utf-8";
+                    return 200 'UP';
+                  }
+
+                  location /framework {
+                    root /usr/share/nginx/html;
+                    try_files $uri $uri/framework/ /framework/index.html 404;
+                    add_header Cache-Control "no-store, no-cache, must-revalidate";
+                  }
+
+                  location /framework/static/ {
+                    alias /usr/share/nginx/html/framework/static/;
+                    expires 1y;
+                    add_header Cache-Control "public";
+                    access_log off;
+                  }
+
+                  location /assets/ {
+                    alias /usr/share/nginx/html/assets/;
+                    expires 1y;
+                    add_header Cache-Control "public";
+                    access_log off;
+                  }
+                  location ~* \.(css|js)$ {
+                    add_header Cache-Control "public, max-age=2629743";
+                  }
+                  location ~ \.(svg|ttf|woff|woff2|otf|ico)$ {
+                    add_header Cache-Control "public, max-age=31536000";
+                  }
+                  location ~ \.(jpg|png|gif|mp3|ogg|mp4)$ {
+                    add_header Cache-Control "public, max-age=31536000";
+                  }
+                  error_page  404 /404.html;
+                  location = /404.html {
+                    root   /usr/share/nginx/html;
+                  }
+                  error_page  403 /403.html;
+                  location = /403.html {
+                    root   /usr/share/nginx/html;
+                  }
+
+                  error_page   500 502 503 504  /50x.html;
+                  location = /50x.html {
+                    root   /usr/share/nginx/html;
+                  }
+
+                  gzip_vary on;
+                  gzip on;
+                  gzip_min_length 1000;
+                  gzip_proxied expired no-cache no-store private auth;
+                  gzip_types text/plain text/css application/json application/javascript application/x-javascript text/javascript;
+              }
+          }
+    config:
+      - name: "ENVIRONMENT"
+        value: "production"
+    secret: {}
+
+  common:
+    config: {}
+    secret: {}
+
+#######Esto es editable por el DevOps#######
+
+global:
+  environment: "production"
+  replicaCount: "1"
+  revisionHistoryLimit: "5"
+  minReadySeconds: "0"
+  version: "v1"
+
+container:
+  registry: "bancopichinchaec.azurecr.io"
+  tag: "2020.04.06-16.04.45"
+  pullPolicy: "Always"
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 128Mi
+  port:
+    - name: frm-pyj-port
+      servicePort: 8000
+      containerPort: 80
+      protocol: TCP
+  volumeMounts: {}
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 1
+  targetMemory: 64Mi
+  targetCpu: 20m
+
+volumes: {}

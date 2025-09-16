@@ -1,0 +1,192 @@
+version: "3.9"
+
+# docker compose up -d --build
+# Este archivo orquesta el ecosistema local para todos los microservicios y (opcionalmente) microfrontends.
+# Ajustar variables según necesidades reales de integración (OAuth2, Kafka, etc.).
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: db-postgres
+    environment:
+      POSTGRES_DB: finance_db
+      POSTGRES_USER: postgres
+      # Password alineada con application-development.yml (password: root)
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: cache-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eureka:
+    build: ./backend/msa-eureka
+    container_name: msa-eureka
+    ports:
+      - "8761:8761"
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_INSTANCE_HOSTNAME: eureka
+    networks:
+      - backend-net
+    depends_on:
+      - postgres
+
+  gateway:
+    build: ./backend/msa-gateway
+    container_name: msa-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka
+    networks:
+      - backend-net
+    depends_on:
+      - eureka
+
+  msa-account-transaction:
+    build: ./backend/msa-account-transaction
+    container_name: msa-account-transaction
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      # Config DB (según application-development.yml)
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      # OAuth2 / Keycloak (issuer-uri y token-url deducidos de application-development.yml)
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8089/realms/bp-project
+      KEYCLOAK_TOKEN_URL: http://keycloak:8089/realms/bp-project/protocol/openid-connect/token
+      KEYCLOAK_CLIENT_ID: bp-authentication
+      KEYCLOAK_CLIENT_SECRET: PQhR0aW2g4WPVmE4frs3BwmGwtSgh5KI
+      KEYCLOAK_USERNAME: mpuenaya
+      KEYCLOAK_PASSWORD: 123qwe
+    networks:
+      - backend-net
+    depends_on:
+      - eureka
+      - postgres
+      - redis
+
+  msa-deposit-account:
+    build: ./backend/msa-deposit-account
+    container_name: msa-deposit-account
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8089/realms/bp-project
+      KEYCLOAK_TOKEN_URL: http://keycloak:8089/realms/bp-project/protocol/openid-connect/token
+      KEYCLOAK_CLIENT_ID: bp-authentication
+      KEYCLOAK_CLIENT_SECRET: PQhR0aW2g4WPVmE4frs3BwmGwtSgh5KI
+      KEYCLOAK_USERNAME: mpuenaya
+      KEYCLOAK_PASSWORD: 123qwe
+    networks:
+      - backend-net
+    depends_on:
+      - eureka
+      - postgres
+
+  msa-customer-profiles:
+    build: ./backend/msa-customer-profiles
+    container_name: msa-customer-profiles
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8089/realms/bp-project
+    networks:
+      - backend-net
+    depends_on:
+      - eureka
+      - postgres
+
+  # Frontend shell (ejemplo: construir y servir estático con Nginx)
+  shell-financial-management:
+    build: ./frontend/mfa-accounts
+    container_name: mf-shell
+    ports:
+      - "4200:80"
+    networks:
+      - frontend-net
+      - backend-net
+    depends_on:
+      - gateway
+
+  # Opcional: keycloak / kafka / rabbitmq si se requiere entorno más cercano a producción
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    command: start-dev --http-port=9595
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Realm y cliente se crearían manualmente o vía import (pendiente de script)
+    ports:
+      - "9595:9595"
+    networks:
+      - backend-net
+
+  # Opcional: RabbitMQ (requerido por msa-deposit-account si se habilita mensajería)
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: mq-broker
+    ports:
+      - "5672:5672"   # protocolo AMQP
+      - "15672:15672" # consola web
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - backend-net
+
+  # NOTA Kafka: Los servicios apuntan a Confluent Cloud (bootstrap servers externos). Para entorno local
+  # se puede añadir un stack (ej. bitnami/kafka + zookeeper) y sobrescribir TRE_KAFKA_SERVER con 'kafka:9092'.
+
+networks:
+  backend-net:
+  frontend-net:
+
+volumes:
+  pgdata:
+
+# Notas:
+# 1. Si los microservicios esperan issuer-uri en localhost, ajustar a nombre del servicio docker (ej: http://keycloak:8089/realms/bp-project)
+# 2. Ajustar variables kafka/rabbitmq si se añaden esos contenedores.
+# 3. Para desarrollo rápido se pueden comentar servicios no necesarios.

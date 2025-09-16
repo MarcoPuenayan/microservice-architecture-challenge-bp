@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: msa-customer-profiles
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9595/realms/bp-project
+  header:
+    channel: digital
+    medium: web
+  profiles:
+    active: development
+  web:
+    locale: es
+  cache:
+    type: caffeine
+
+  kafka:
+    security:
+      protocol: "SSL"
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username= "${ONB_KAFKA_USERNAME:JXNIKQ7E7OXU2DAJ}" password="${ONB_KAFKA_SECRET:girmjAPbF/UghJ+PDIYWT6PYnbKytQG2ivN+GacHVINzraH4D7MvZdlrBwDRmyyR}";
+      bootstrap:
+        servers: ${TRE_KAFKA_SERVER:pkc-56d1g.eastus.azure.confluent.cloud:9092}
+      security:
+        protocol: SASL_SSL
+      session:
+        timeout:
+          ms: 45000
+      request:
+        timeout:
+          ms: 2000
+logging:
+  level:
+    root: INFO
+    com.pichincha: INFO
+    org:
+      apache:
+        kafka: OFF
+  transactional:
+    sendLog: true
+    kafka:
+      topic:
+        name: ${TRE_KAFKA_TOPIC_TRANSACTIONAL:tre_tpc_sp_logs-trx_test}
+    tracer:
+      exclusion:
+        uri: actuator,swagger,api-docs,csrf,favicon
+    obfuscation:
+      fields: ${MY_FIELDS_TO_OBFUSCATE:''}
+      enabled: ${LOG_OBFUSCATION_ENABLED:false}
+      character: '*****************'
+      obfuscation-type: REQUEST
+  auditor:
+    kafka:
+      topic:
+        name: ${TRE_KAFKA_TOPIC_AUDITOR:tre_tpc_sp_logs-aud_dev}
+    mode: 'EXTERNAL'
+    obfuscation:
+      fields: ${MY_FIELDS_TO_OBFUSCATE:(code) | (identifier)}
+      enable: ${LOG_OBFUSCATION_ENABLED:true}
+      character: '*****************'
+    executor:
+      isDefault: true
+      corePoolSize: 100
+      maxPoolSize: 300
+      keepAliveTime: 30
+      queueSize: 1000
+
+control:
+  errors:
+    trace: false
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

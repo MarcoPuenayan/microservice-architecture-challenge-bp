@@ -1,0 +1,876 @@
+
+openapi: 3.0.0
+info:
+  title: MSA Domain - Deposit Account V1
+  description: |
+    <sup>(ES)</sup> Microservicio que permite realizar el CRUD de cuentas. <br><br>
+    <sup>(EN)</sup> Microservice that allows performing CRUD operations on accounts. <br><br>
+  contact:
+    name: Retail - Multicore - Marco Puenayan
+    email: mpuenaya@pichincha.com
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Development
+
+paths:
+  /domain/deposit-account/v1/deposit-accounts/retrieve:
+    get:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Devuelve una lista de cuentas. ⁽ᴱᴺ⁾ Returns a list of accounts
+      description: |-
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup>⠀Consulta información general asociada a una cuenta.<br>
+        <sup>(EN)</sup>⠀Retrieve general information associated with an account.<br><br>
+      operationId: GetDepositAccount
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDepositAccountResponse'
+              examples:
+                GetDepositAccountResponseExample:
+                  $ref: '#/components/examples/GetDepositAccountResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/register:
+    post:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Método que permite crear una cuenta. ⁽ᴱᴺ⁾ Method that allows creating a account
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite crear una cuenta.<br>
+        <sup>(EN)</sup> Allows you to create a account.<br><br>
+      operationId: PostDepositAccount
+      requestBody:
+        description: Creates a accounts
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostDepositAccountRequest'
+            examples:
+              PostDepositAccountRequestExample:
+                $ref: '#/components/examples/PostDepositAccountRequestExample'
+      responses:
+        "201":
+          description: |-
+            <b>`Created`</b>
+            <br><br>
+            Account created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDepositAccountResponse'
+              examples:
+                PostDepositAccountResponseExample:
+                  $ref: '#/components/examples/PostDepositAccountResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/{accountId}/retrieve:
+    get:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Recupera la información de una cuenta. ⁽ᴱᴺ⁾ Retrieves a account information.
+      description: |-
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup>⠀Consulta información general asociada a una cuenta.<br>
+        <sup>(EN)</sup>⠀Retrieve general information associated with an account.<br><br>
+      operationId: GetDepositAccountById
+      parameters:
+        - name: accountId
+          in: path
+          description: ⁽ᴱˢ⁾ Número de cuenta ⁽ᴱᴺ⁾ Account number.
+          required: true
+          schema:
+            type: string
+            example: "478770"
+      responses:
+        '200':
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDepositAccountByIdResponse'
+              examples:
+                GetDepositAccountByIdResponseExample:
+                  $ref: '#/components/examples/GetDepositAccountByIdResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/{accountId}/update:
+    put:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Método que permite actualizar una cuenta. ⁽ᴱᴺ⁾ Method that allows to update a account.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite actualizar una cuenta.<br>
+        <sup>(EN)</sup> Allows you to update a account.<br><br>
+      operationId: PutDepositAccount
+      parameters:
+        - name: accountId
+          in: path
+          description: ⁽ᴱˢ⁾ Número de cuenta ⁽ᴱᴺ⁾ Account number.
+          required: true
+          schema:
+            type: string
+            example: "478770"
+      requestBody:
+        description: Updates a account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutDepositAccountRequest'
+            examples:
+              PutDepositAccountRequestExample:
+                $ref: '#/components/examples/PutDepositAccountRequestExample'
+      responses:
+        "204":
+          description: |
+            <b>`No content`</b><br><br>
+             <sup>(ES)</sup>⠀Cuenta actualizada.<br>
+             <sup>(EN)</sup>⠀Account updated.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/{accountId}/delete:
+    delete:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Método que permite eliminar una cuenta. ⁽ᴱᴺ⁾ Method that allows to delete a account.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite eliminar una cuenta.<br>
+        <sup>(EN)</sup> Allows you to delete a account.<br><br>
+      operationId: DeleteDepositAccount
+      parameters:
+        - name: accountId
+          in: path
+          description: ⁽ᴱˢ⁾ Número de cuenta ⁽ᴱᴺ⁾ Account number.
+          required: true
+          schema:
+            type: string
+            example: "478770"
+      responses:
+        "204":
+          description: |
+            <b>`No content`</b><br><br>
+             <sup>(ES)</sup>⠀Cuenta eliminada.<br>
+             <sup>(EN)</sup>⠀Account deleted.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/by-customer/{customerId}/retrieve:
+    get:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Recupera la información de las cuentas por cliente. ⁽ᴱᴺ⁾ Retrieve account information by customer.
+      description: |-
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup>⠀Consulta información general asociada a las cuentas por cliente.<br>
+        <sup>(EN)</sup>⠀Consult general information associated with accounts by client.<br><br>
+      operationId: GetDepositAccountByIdCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDepositAccountByIdResponse'
+              examples:
+                GetDepositAccountByIdResponseExample:
+                  $ref: '#/components/examples/GetDepositAccountByIdResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/deposit-account/v1/deposit-accounts/batch-retrieve:
+    post:
+      tags:
+        - Deposit Account
+      summary: ⁽ᴱˢ⁾ Método que permite recuperar múltiples cuentas por ID. ⁽ᴱᴺ⁾ Retrieve multiple accounts by IDs.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite consultar multiples cuentas por id.<br>
+        <sup>(EN)</sup> Allows you to consult multiple accounts by ID.<br><br>
+      operationId: PostDepositAccountBatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostDepositAccountResponse'
+              examples:
+                PostDepositAccountResponseExample:
+                  $ref: '#/components/examples/PostDepositAccountResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+components:
+  schemas:
+    GetDepositAccountResponse:
+      type: object
+      properties:
+        accounts:
+          type: array
+          items:
+            type: object
+            properties:
+              accountNumber:
+                type: string
+              accountTypeId:
+                type: integer
+              accountTypeDescription:
+                type: string
+              initialBalance:
+                type: number
+                format: double
+              customerId:
+                type: string
+              customerName:
+                type: string
+              status:
+                type: boolean
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+    PostDepositAccountRequest:
+      type: object
+      required: [accountNumber, accountTypeId, initialBalance, customerId]
+      properties:
+        accountNumber:
+          type: string
+        accountTypeId:
+          type: integer
+        initialBalance:
+          type: number
+          format: double
+        customerId:
+          type: string
+          format: uuid
+    PostDepositAccountResponse:
+      type: object
+      required: [accountNumber, accountTypeId, accountTypeDescription, initialBalance, customerId, customerName, status]
+      properties:
+        accountNumber:
+          type: string
+        accountTypeId:
+          type: integer
+        accountTypeDescription:
+          type: string
+        initialBalance:
+          type: number
+          format: double
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+        status:
+          type: boolean
+    GetDepositAccountByIdResponse:
+      type: object
+      required: [accountNumber, accountTypeId, accountTypeDescription, initialBalance, customerId, customerName, status]
+      properties:
+        accountNumber:
+          type: string
+        accountTypeId:
+          type: integer
+        accountTypeDescription:
+          type: string
+        initialBalance:
+          type: number
+          format: double
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+        status:
+          type: boolean
+    PutDepositAccountRequest:
+      type: object
+      required: [accountNumber, accountTypeId, initialBalance, customerId, status]
+      properties:
+        accountNumber:
+          type: string
+        accountTypeId:
+          type: integer
+        initialBalance:
+          type: number
+          format: double
+        customerId:
+          type: string
+          format: uuid
+        status:
+          type: boolean
+
+    ErrorModel:
+      required:
+        - detail
+        - instance
+        - title
+        - type
+      type: object
+      properties:
+        title:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de error técnico.
+            <br>
+            <sup><i>(EN)</i></sup> Technical error message
+          example: Internal Server.
+        detail:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje a presentar al cliente, o error a detalle del evento
+            <br>
+            <sup><i>(EN)</i></sup> Message to display to the client, or error detailing the event
+          example: "Se produjo un error interno, lo estamos revisando."
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorList'
+        instance:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código de catálogo de errores o Una referencia URI que identifique específicamente la aparición del problema.
+            <br>
+            <sup><i>(EN)</i></sup> Bug Catalog Code o A URI reference that specifically identifies the occurrence of the problem.
+          example: "0188"
+        type:
+          maximum: 100
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Una referencia URI que identifica el tipo de problema.
+            <br>
+            <sup><i>(EN)</i></sup> A URI reference that identifies the type of problem.
+          example: /v1/name/pathSuffix
+        resource:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Recurso, Clase u objeto donde se genero el error.
+            <br>
+            <sup><i>(EN)</i></sup> Resource, Class or object where the error was generated.
+          example: UMPClientes0020/ConsultaInformacionCliente01
+        component:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Componente de la aplicación o transacción.
+            <br>
+            <sup><i>(EN)</i></sup> Application component or transaction.
+          example: TX067050
+        backend:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código backend.
+            <br>
+            <sup><i>(EN)</i></sup> Backend code..
+          example: "00045"
+      x-reference: https://pichincha.atlassian.net/wiki/spaces/CDSRL/pages/3102507010/Librer+a+para+manejo+de+Excepciones#Captura-de-errores
+    ErrorList:
+      properties:
+        code:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código de catálogo de errores.
+            <br>
+            <sup><i>(EN)</i></sup> Error catalog code.
+          example: "001"
+        message:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de error técnico.
+            <br>
+            <sup><i>(EN)</i></sup> Technical error message..
+          example: Bad Request
+        businessMessage:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de negocio.
+            <br>
+            <sup><i>(EN)</i></sup> Business message.
+          example: The xyz field is mandatory
+  responses:
+    BadRequest:
+      description: |-
+        <b>`Bad Request`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor no pudo entender la solicitud debido a una sintaxis incorrecta. El cliente NO DEBE repetir la solicitud sin modificaciones.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            BadRequestExample:
+              $ref: '#/components/examples/BadRequestExample'
+            BadRequestCompleteExample:
+              $ref: '#/components/examples/BadRequestCompleteExample'
+    Unauthorized:
+      description: |-
+        <b>`Unauthorized`</b><br><br>
+        <sup><i>(ES)</i></sup> La solicitud requiere la autenticación del usuario.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request requires user authentication.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+            UnauthorizedCompleteExample:
+              $ref: '#/components/examples/UnauthorizedCompleteExample'
+    Forbidden:
+      description: |-
+        <b>`Forbidden`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor entendió la solicitud, pero se niega a cumplirla. La autorización no ayudará y la solicitud NO DEBE repetirse.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            ForbiddenExample:
+              $ref: '#/components/examples/ForbiddenExample'
+            ForbiddenCompleteExample:
+              $ref: '#/components/examples/ForbiddenCompleteExample'
+    NotFound:
+      description: |-
+        <b>`Not Found`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor no ha encontrado nada que coincida con la URI de solicitud.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server has not found anything matching the Request-URI.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+            NotFoundCompleteExample:
+              $ref: '#/components/examples/NotFoundCompleteExample'
+    Conflict:
+      description: |-
+        <b>`Conflict`</b><br><br>
+        <sup><i>(ES)</i></sup> No se pudo completar la solicitud debido a un conflicto con el estado del recurso.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request could not be completed due to a conflict with the current state of the resource.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            ConflictExample:
+              $ref: '#/components/examples/ConflictExample'
+            ConflictCompleteExample:
+              $ref: '#/components/examples/ConflictCompleteExample'
+    TooManyRequests:
+      description: |-
+        <b>`Too Many Requests`</b><br><br>
+        <sup><i>(ES)</i></sup> Indica que el usuario ha enviado demasiadas solicitudes en un período de tiempo determinado ("límite de velocidad").
+        <br><br>
+        <sup><i>(EN)</i></sup> Indicates that the user has sent too many requests in a given amount of time ("rate limiting").
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            TooManyRequestsExample:
+              $ref: '#/components/examples/TooManyRequestsExample'
+            TooManyRequestsCompleteExample:
+              $ref: '#/components/examples/TooManyRequestsCompleteExample'
+    InternalServerError:
+      description: |-
+        <b>`Internal Server Error`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server encountered an unexpected condition which prevented it from fulfilling the request.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            InternalServerErrorExample:
+              $ref: '#/components/examples/InternalServerErrorExample'
+            InternalServerErrorCompleteExample:
+              $ref: '#/components/examples/InternalServerErrorCompleteExample'
+    GatewayTimeout:
+      description: |-
+        <b>`Gateway Timeout`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor, mientras actuaba como puerta de enlace o proxy, no recibió una respuesta oportuna del servidor ascendente.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            GatewayTimeoutExample:
+              $ref: '#/components/examples/GatewayTimeoutExample'
+            GatewayTimeoutCompleteExample:
+              $ref: '#/components/examples/GatewayTimeoutCompleteExample'
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 10
+  examples:
+
+    GetDepositAccountResponseExample:
+      summary: Success response
+      value:
+        account:
+          - accountNumber: "478758"
+            accountTypeId: 1
+            accountTypeDescription: "Ahorro"
+            initialBalance: 2000.0
+            customerId: "bab492de-53ef-4c25-baac-c5265558b9db"
+            customerName: "Marco Puenayan"
+            status: true
+        page: 0
+        size: 10
+        totalElements: 1
+        totalPages: 1
+    PostDepositAccountRequestExample:
+      summary: Success request
+      value:
+        accountNumber: "478758"
+        accountTypeId: 1
+        initialBalance: 2000.0
+        customerId: "bab492de-53ef-4c25-baac-c5265558b9db"
+    PostDepositAccountResponseExample:
+      summary: Success request
+      value:
+        accountNumber: "478758"
+        accountTypeId: 1
+        accountTypeDescription: "ahorro"
+        initialBalance: 2000.0
+        customerId: "bab492de-53ef-4c25-baac-c5265558b9db"
+        customerName: "Marco Puenayan"
+        status: true
+    GetDepositAccountByIdResponseExample:
+      summary: Success request
+      value:
+        accountNumber: "478758"
+        accountTypeId: 1
+        accountTypeDescription: "Ahorro"
+        initialBalance: 2000.0
+        clientId: "bab492de-53ef-4c25-baac-c5265558b9db"
+        clientName: "Marco Puenayan"
+        status: true
+    PutDepositAccountRequestExample:
+      summary: Success request
+      value:
+        accountNumber: "478758"
+        accountTypeId: 1
+        initialBalance: 2500.0
+        clientId: "bab492de-53ef-4c25-baac-c5265558b9db"
+        status: false
+
+    BadRequestExample:
+      value:
+        title: Your request parameters didn't validate.
+        detail: "Se produjo un error interno, lo estamos revisando."
+        instance: "0188"
+        type: /v1/name/pathSuffix
+    BadRequestCompleteExample:
+      value:
+        title: Your request parameters didn't validate.
+        errors:
+          - code: "001"
+            message: Bad Request
+            businessMessage: The xyz field is mandatory
+        instance: "0188"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    UnauthorizedExample:
+      value:
+        title: Unauthorized Access
+        detail: You do not have permission to access this resource. Please log in.
+        instance: "0188"
+        type: /v1/name/pathSuffix
+    UnauthorizedCompleteExample:
+      value:
+        title: Unauthorized Access
+        detail: You do not have permission to access this resource. Please log in.
+        errors:
+          - code: "001"
+            message: Authentication Failed
+            businessMessage: You must authenticate to access this resource.
+        instance: "0188"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    ForbiddenExample:
+      value:
+        title: Access Denied
+        detail: You do not have sufficient permissions to perform this operation.
+        instance: "0189"
+        type: /v1/name/pathSuffix
+    ForbiddenCompleteExample:
+      value:
+        title: Access Denied
+        detail: You do not have sufficient permissions to perform this operation.
+        errors:
+          - code: "003"
+            message: Permission Denied
+            businessMessage: You do not have permission to perform this action.
+        instance: "0189"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    NotFoundExample:
+      value:
+        title: Resource Not Found
+        detail: The requested resource does not exist on the server.
+        instance: "0190"
+        type: /v1/name/pathSuffix
+    NotFoundCompleteExample:
+      value:
+        title: Resource Not Found
+        errors:
+          - code: "107"
+            message: Resource Missing
+            businessMessage: The requested resource could not be located.
+        instance: "0190"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    ConflictExample:
+      value:
+        title: Conflict Detected
+        detail: The request could not be completed due to a conflict in the provided data.
+        instance: "0192"
+        type: /v1/name/pathSuffix
+    ConflictCompleteExample:
+      value:
+        title: Conflict Detected
+        detail: The request could not be completed due to a conflict in the provided data.
+        errors:
+          - code: "001"
+            message: Data Conflict
+            businessMessage: The request conflicts with existing data.
+        instance: "0192"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    TooManyRequestsExample:
+      value:
+        title: Too Many Requests
+        detail: You have exceeded the allowed request limit. Please try again later.
+        instance: "0193"
+        type: /v1/name/pathSuffix
+    TooManyRequestsCompleteExample:
+      value:
+        title: Too Many Requests
+        detail: You have exceeded the allowed request limit. Please try again later.
+        errors:
+          - code: "003"
+            message: Rate Limit Exceeded
+            businessMessage: You have exceeded the allowed number of requests.
+        instance: "0193"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    InternalServerErrorExample:
+      value:
+        title: Internal Server Error
+        detail: An internal server error occurred. We are working to resolve it.
+        instance: "0194"
+        type: /v1/name/pathSuffix
+    InternalServerErrorCompleteExample:
+      value:
+        title: Internal Server Error
+        errors:
+          - code: "009"
+            message: Server Error
+            businessMessage: An unexpected error occurred on the server.
+        instance: "0194"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    GatewayTimeoutExample:
+      value:
+        title: Gateway Timeout
+        detail: The gateway server did not receive a response in time. Please try again.
+        instance: "0197"
+        type: /v1/name/pathSuffix
+    GatewayTimeoutCompleteExample:
+      value:
+        title: Gateway Timeout
+        errors:
+          - code: "003"
+            message: Timeout Error
+            businessMessage: The gateway timed out waiting for a response.
+        instance: "0197"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"

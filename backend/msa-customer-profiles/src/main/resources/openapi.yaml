@@ -1,0 +1,870 @@
+
+openapi: 3.0.0
+info:
+  title: MSA Domain - Customer Profiles V1
+  description: |
+    <sup>(ES)</sup> Microservicio que permite realizar el CRUD de un cliente. <br><br>
+    <sup>(EN)</sup> Microservice that allows performing CRUD operations on a client. <br><br>
+  contact:
+    name: Retail - Multicore - Marco Puenayan
+    email: mpuenaya@pichincha.com
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Development
+
+tags:
+  - name: Customer Profiles
+    description: Customer Profiles Controller
+
+paths:
+  /domain/customer-profile/v1/customer-profiles/retrieve:
+    get:
+      tags:
+        - Customer Profiles
+      summary: ⁽ᴱˢ⁾ Devuelve una lista de clientes. ⁽ᴱᴺ⁾ Returns a list of clients
+      description: |-
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup>⠀Consulta información general asociada a un cliente.<br>
+        <sup>(EN)</sup>⠀Retrieve general information associated with an client.<br><br>
+      operationId: GetCustomerProfiles
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerProfilesResponse'
+              examples:
+                GetCustomerProfilesResponseExample:
+                  $ref: '#/components/examples/GetCustomerProfilesResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/customer-profile/v1/customer-profiles/register:
+    post:
+      tags:
+        - Customer Profiles
+      summary: ⁽ᴱˢ⁾ Método que permite crear un cliente. ⁽ᴱᴺ⁾ Method that allows creating a client
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite crear un cliente.<br>
+        <sup>(EN)</sup> Allows you to create a client.<br><br>
+      operationId: PostCustomerProfiles
+      requestBody:
+        description: Creates a customer profiles
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCustomerProfilesRequest'
+            examples:
+              PostCustomerProfilesRequestExample:
+                $ref: '#/components/examples/PostCustomerProfilesRequestExample'
+      responses:
+        "201":
+          description: |-
+            <b>`Created`</b>
+            <br><br>
+            Customer Profiles created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCustomerProfilesResponse'
+              examples:
+                PostCustomerProfilesResponseExample:
+                  $ref: '#/components/examples/PostCustomerProfilesResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/customer-profile/v1/customer-profiles/{customerId}/retrieve:
+    get:
+      tags:
+        - Customer Profiles
+      summary: ⁽ᴱˢ⁾ Recupera la información de un cliente. ⁽ᴱᴺ⁾ Retrieves a client information.
+      description: |-
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup>⠀Consulta información general asociada a un cliente.<br>
+        <sup>(EN)</sup>⠀Retrieve general information associated with an client.<br><br>
+      operationId: GetCustomerProfilesById
+      parameters:
+        - name: customerId
+          in: path
+          description: ⁽ᴱˢ⁾ Id del cliente. ⁽ᴱᴺ⁾ customer Id.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "bab492de-53ef-4c25-baac-c5265558b9db"
+      responses:
+        "200":
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerProfilesByIdResponse'
+              examples:
+                GetCustomerProfilesByIdResponseExample:
+                  $ref: '#/components/examples/GetCustomerProfilesByIdResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/customer-profile/v1/customer-profiles/{customerId}/update:
+    put:
+      tags:
+        - Customer Profiles
+      summary: ⁽ᴱˢ⁾ Método que permite actualizar un cliente. ⁽ᴱᴺ⁾ Method that allows to update a client.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite actualizar un cliente.<br>
+        <sup>(EN)</sup> Allows you to update a client.<br><br>
+      operationId: PutCustomerProfiles
+      parameters:
+        - name: customerId
+          in: path
+          description: ⁽ᴱˢ⁾ Id del cliente. ⁽ᴱᴺ⁾ customer Id.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "bab492de-53ef-4c25-baac-c5265558b9db"
+      requestBody:
+        description: Updates a customer profiles
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCustomerProfilesRequest'
+            examples:
+              PutCustomerProfilesRequestExample:
+                $ref: '#/components/examples/PutCustomerProfilesRequestExample'
+      responses:
+        "204":
+          description: |
+            <b>`No content`</b><br><br>
+             <sup>(ES)</sup>⠀Cliente actualizado.<br>
+             <sup>(EN)</sup>⠀Client updated.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/customer-profile/v1/customer-profiles/{customerId}/delete:
+    delete:
+      tags:
+        - Customer Profiles
+      summary: ⁽ᴱˢ⁾ Método que permite eliminar un cliente. ⁽ᴱᴺ⁾ Method that allows to delete a client.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite eliminar un cliente.<br>
+        <sup>(EN)</sup> Allows you to delete a client.<br><br>
+      operationId: DeleteCustomerProfiles
+      parameters:
+        - name: customerId
+          in: path
+          description: ⁽ᴱˢ⁾ Id del cliente. ⁽ᴱᴺ⁾ customer Id.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "bab492de-53ef-4c25-baac-c5265558b9db"
+      responses:
+        "204":
+          description: |
+            <b>`No content`</b><br><br>
+             <sup>(ES)</sup>⠀Cliente eliminado.<br>
+             <sup>(EN)</sup>⠀Client deleted.
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+  /domain/customer-profile/v1/customer-profiles/batch-retrieve:
+    post:
+      tags:
+        - CustomerProfiles
+      summary: ⁽ᴱˢ⁾ Método que permite recuperar múltiples perfiles de clientes por ID. ⁽ᴱᴺ⁾ Retrieve multiple customer profiles by IDs.
+      description: |
+        <h3>Descripción⠀<small>¦ Description:</small></h3>
+        <sup>(ES)</sup> Permite eliminar un cliente.<br>
+        <sup>(EN)</sup> Allows you to delete a client.<br><br>
+      operationId: PostCustomerProfilesBatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          description: |-
+            <b>`OK`</b>
+            <br><br>
+            Successful search.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostCustomerProfilesResponse'
+              examples:
+                GetCustomerProfilesByIdResponseExample:
+                  $ref: '#/components/examples/GetCustomerProfilesByIdResponseExample'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "409":
+          $ref: '#/components/responses/Conflict'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+        "504":
+          $ref: '#/components/responses/GatewayTimeout'
+
+components:
+  schemas:
+    GetCustomerProfilesResponse:
+      type: object
+      properties:
+        customer:
+          type: array
+          items:
+            type: object
+            properties:
+              customerId:
+                type: string
+              name:
+                type: string
+              gender:
+                type: string
+              age:
+                type: integer
+              identification:
+                type: string
+              address:
+                type: string
+              phone:
+                type: string
+              status:
+                type: boolean
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+    PostCustomerProfilesRequest:
+      type: object
+      required: [name, gender, age, identification, address, phone, password]
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          maxLength: 2
+          minLength: 1
+          pattern: '[0-9]+'
+          type: integer
+        identification:
+          maxLength: 10
+          minLength: 10
+          pattern: '[0-9]+'
+          type: string
+        address:
+          type: string
+        phone:
+          maxLength: 10
+          minLength: 10
+          pattern: '[0-9]+'
+          type: string
+        password:
+          type: string
+    PostCustomerProfilesResponse:
+      type: object
+      required: [customerId, name, gender, age, identification, address, phone, status]
+      properties:
+        customerId:
+          type: string
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: integer
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        status:
+          type: boolean
+    GetCustomerProfilesByIdResponse:
+      type: object
+      required: [customerId, name, gender, age, identification, address, phone, status]
+      properties:
+        customerId:
+          type: string
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          type: integer
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        status:
+          type: boolean
+    PutCustomerProfilesRequest:
+      type: object
+      required: [name, gender, age, identification, address, phone, password, status]
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+        age:
+          maxLength: 2
+          minLength: 1
+          pattern: '[0-9]+'
+          type: integer
+        identification:
+          maxLength: 10
+          minLength: 10
+          pattern: '[0-9]+'
+          type: string
+        address:
+          type: string
+        phone:
+          maxLength: 10
+          minLength: 10
+          pattern: '[0-9]+'
+          type: string
+        password:
+          type: string
+        status:
+          type: boolean
+
+    ErrorModel:
+      required:
+        - detail
+        - instance
+        - title
+        - type
+      type: object
+      properties:
+        title:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de error técnico.
+            <br>
+            <sup><i>(EN)</i></sup> Technical error message
+          example: Internal Server.
+        detail:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje a presentar al cliente, o error a detalle del evento
+            <br>
+            <sup><i>(EN)</i></sup> Message to display to the client, or error detailing the event
+          example: "Se produjo un error interno, lo estamos revisando."
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorList'
+        instance:
+          maximum: 50
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código de catálogo de errores o Una referencia URI que identifique específicamente la aparición del problema.
+            <br>
+            <sup><i>(EN)</i></sup> Bug Catalog Code o A URI reference that specifically identifies the occurrence of the problem.
+          example: "0188"
+        type:
+          maximum: 100
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Una referencia URI que identifica el tipo de problema.
+            <br>
+            <sup><i>(EN)</i></sup> A URI reference that identifies the type of problem.
+          example: /v1/name/pathSuffix
+        resource:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Recurso, Clase u objeto donde se genero el error.
+            <br>
+            <sup><i>(EN)</i></sup> Resource, Class or object where the error was generated.
+          example: UMPClientes0020/ConsultaInformacionCliente01
+        component:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Componente de la aplicación o transacción.
+            <br>
+            <sup><i>(EN)</i></sup> Application component or transaction.
+          example: TX067050
+        backend:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código backend.
+            <br>
+            <sup><i>(EN)</i></sup> Backend code..
+          example: "00045"
+      x-reference: https://pichincha.atlassian.net/wiki/spaces/CDSRL/pages/3102507010/Librer+a+para+manejo+de+Excepciones#Captura-de-errores
+    ErrorList:
+      properties:
+        code:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Código de catálogo de errores.
+            <br>
+            <sup><i>(EN)</i></sup> Error catalog code.
+          example: "001"
+        message:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de error técnico.
+            <br>
+            <sup><i>(EN)</i></sup> Technical error message..
+          example: Bad Request
+        businessMessage:
+          type: string
+          description: |-
+            <sup><i>(ES)</i></sup> Mensaje de negocio.
+            <br>
+            <sup><i>(EN)</i></sup> Business message.
+          example: The xyz field is mandatory
+  responses:
+    BadRequest:
+      description: |-
+        <b>`Bad Request`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor no pudo entender la solicitud debido a una sintaxis incorrecta. El cliente NO DEBE repetir la solicitud sin modificaciones.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            BadRequestExample:
+              $ref: '#/components/examples/BadRequestExample'
+            BadRequestCompleteExample:
+              $ref: '#/components/examples/BadRequestCompleteExample'
+    Unauthorized:
+      description: |-
+        <b>`Unauthorized`</b><br><br>
+        <sup><i>(ES)</i></sup> La solicitud requiere la autenticación del usuario.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request requires user authentication.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+            UnauthorizedCompleteExample:
+              $ref: '#/components/examples/UnauthorizedCompleteExample'
+    Forbidden:
+      description: |-
+        <b>`Forbidden`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor entendió la solicitud, pero se niega a cumplirla. La autorización no ayudará y la solicitud NO DEBE repetirse.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server understood the request, but is refusing to fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            ForbiddenExample:
+              $ref: '#/components/examples/ForbiddenExample'
+            ForbiddenCompleteExample:
+              $ref: '#/components/examples/ForbiddenCompleteExample'
+    NotFound:
+      description: |-
+        <b>`Not Found`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor no ha encontrado nada que coincida con la URI de solicitud.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server has not found anything matching the Request-URI.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+            NotFoundCompleteExample:
+              $ref: '#/components/examples/NotFoundCompleteExample'
+    Conflict:
+      description: |-
+        <b>`Conflict`</b><br><br>
+        <sup><i>(ES)</i></sup> No se pudo completar la solicitud debido a un conflicto con el estado del recurso.
+        <br><br>
+        <sup><i>(EN)</i></sup> The request could not be completed due to a conflict with the current state of the resource.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            ConflictExample:
+              $ref: '#/components/examples/ConflictExample'
+            ConflictCompleteExample:
+              $ref: '#/components/examples/ConflictCompleteExample'
+    TooManyRequests:
+      description: |-
+        <b>`Too Many Requests`</b><br><br>
+        <sup><i>(ES)</i></sup> Indica que el usuario ha enviado demasiadas solicitudes en un período de tiempo determinado ("límite de velocidad").
+        <br><br>
+        <sup><i>(EN)</i></sup> Indicates that the user has sent too many requests in a given amount of time ("rate limiting").
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            TooManyRequestsExample:
+              $ref: '#/components/examples/TooManyRequestsExample'
+            TooManyRequestsCompleteExample:
+              $ref: '#/components/examples/TooManyRequestsCompleteExample'
+    InternalServerError:
+      description: |-
+        <b>`Internal Server Error`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server encountered an unexpected condition which prevented it from fulfilling the request.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            InternalServerErrorExample:
+              $ref: '#/components/examples/InternalServerErrorExample'
+            InternalServerErrorCompleteExample:
+              $ref: '#/components/examples/InternalServerErrorCompleteExample'
+    GatewayTimeout:
+      description: |-
+        <b>`Gateway Timeout`</b><br><br>
+        <sup><i>(ES)</i></sup> El servidor, mientras actuaba como puerta de enlace o proxy, no recibió una respuesta oportuna del servidor ascendente.
+        <br><br>
+        <sup><i>(EN)</i></sup> The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server.
+      content:
+        application/json;charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          examples:
+            GatewayTimeoutExample:
+              $ref: '#/components/examples/GatewayTimeoutExample'
+            GatewayTimeoutCompleteExample:
+              $ref: '#/components/examples/GatewayTimeoutCompleteExample'
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 10
+  examples:
+    GetCustomerProfilesResponseExample:
+      summary: Success response
+      value:
+        customer:
+          - customerId: "bab492de-53ef-4c25-baac-c5265558b9db"
+            name: "Marco Puenayan"
+            gender: "Femenino"
+            age: 28
+            identification: "0979847154"
+            address: "Norte"
+            phone: "098254785"
+            status: true
+        page: 0
+        size: 10
+        totalElements: 1
+        totalPages: 1
+    PostCustomerProfilesRequestExample:
+      summary: Success request
+      value:
+        name: "Marco Puenayan"
+        gender: "Femenino"
+        age: 28
+        identification: "0979847154"
+        address: "Norte"
+        phone: "098254785"
+        password: "1234"
+    PostCustomerProfilesResponseExample:
+      summary: Success request
+      value:
+        customerId: "bab492de-53ef-4c25-baac-c5265558b9db"
+        name: "Marco Puenayan"
+        gender: "Femenino"
+        age: 28
+        identification: "0979847154"
+        address: "Norte"
+        phone: "098254785"
+        status: true
+    GetCustomerProfilesByIdResponseExample:
+      summary: Success response
+      value:
+        clientId: "bab492de-53ef-4c25-baac-c5265558b9db"
+        name: "Marco Puenayan"
+        gender: "Femenino"
+        age: 28
+        identification: "0979847154"
+        address: "Norte"
+        phone: "098254785"
+        status: true
+    PutCustomerProfilesRequestExample:
+      summary: Success response
+      value:
+        name: "Marco Puenayan Actualizado"
+        gender: "Femenino"
+        age: 29
+        identification: "0979847154"
+        address: "Sur"
+        phone: "098254785"
+        password: "1234"
+        status: true
+
+    BadRequestExample:
+      value:
+        title: Your request parameters didn't validate.
+        detail: "Se produjo un error interno, lo estamos revisando."
+        instance: "0188"
+        type: /v1/name/pathSuffix
+    BadRequestCompleteExample:
+      value:
+        title: Your request parameters didn't validate.
+        errors:
+          - code: "001"
+            message: Bad Request
+            businessMessage: The xyz field is mandatory
+        instance: "0188"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    UnauthorizedExample:
+      value:
+        title: Unauthorized Access
+        detail: You do not have permission to access this resource. Please log in.
+        instance: "0188"
+        type: /v1/name/pathSuffix
+    UnauthorizedCompleteExample:
+      value:
+        title: Unauthorized Access
+        detail: You do not have permission to access this resource. Please log in.
+        errors:
+          - code: "001"
+            message: Authentication Failed
+            businessMessage: You must authenticate to access this resource.
+        instance: "0188"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    ForbiddenExample:
+      value:
+        title: Access Denied
+        detail: You do not have sufficient permissions to perform this operation.
+        instance: "0189"
+        type: /v1/name/pathSuffix
+    ForbiddenCompleteExample:
+      value:
+        title: Access Denied
+        detail: You do not have sufficient permissions to perform this operation.
+        errors:
+          - code: "003"
+            message: Permission Denied
+            businessMessage: You do not have permission to perform this action.
+        instance: "0189"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    NotFoundExample:
+      value:
+        title: Resource Not Found
+        detail: The requested resource does not exist on the server.
+        instance: "0190"
+        type: /v1/name/pathSuffix
+    NotFoundCompleteExample:
+      value:
+        title: Resource Not Found
+        errors:
+          - code: "107"
+            message: Resource Missing
+            businessMessage: The requested resource could not be located.
+        instance: "0190"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    ConflictExample:
+      value:
+        title: Conflict Detected
+        detail: The request could not be completed due to a conflict in the provided data.
+        instance: "0192"
+        type: /v1/name/pathSuffix
+    ConflictCompleteExample:
+      value:
+        title: Conflict Detected
+        detail: The request could not be completed due to a conflict in the provided data.
+        errors:
+          - code: "001"
+            message: Data Conflict
+            businessMessage: The request conflicts with existing data.
+        instance: "0192"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    TooManyRequestsExample:
+      value:
+        title: Too Many Requests
+        detail: You have exceeded the allowed request limit. Please try again later.
+        instance: "0193"
+        type: /v1/name/pathSuffix
+    TooManyRequestsCompleteExample:
+      value:
+        title: Too Many Requests
+        detail: You have exceeded the allowed request limit. Please try again later.
+        errors:
+          - code: "003"
+            message: Rate Limit Exceeded
+            businessMessage: You have exceeded the allowed number of requests.
+        instance: "0193"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    InternalServerErrorExample:
+      value:
+        title: Internal Server Error
+        detail: An internal server error occurred. We are working to resolve it.
+        instance: "0194"
+        type: /v1/name/pathSuffix
+    InternalServerErrorCompleteExample:
+      value:
+        title: Internal Server Error
+        errors:
+          - code: "009"
+            message: Server Error
+            businessMessage: An unexpected error occurred on the server.
+        instance: "0194"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"
+    GatewayTimeoutExample:
+      value:
+        title: Gateway Timeout
+        detail: The gateway server did not receive a response in time. Please try again.
+        instance: "0197"
+        type: /v1/name/pathSuffix
+    GatewayTimeoutCompleteExample:
+      value:
+        title: Gateway Timeout
+        errors:
+          - code: "003"
+            message: Timeout Error
+            businessMessage: The gateway timed out waiting for a response.
+        instance: "0197"
+        type: /v1/name/pathSuffix
+        resource: UMPClientes0020/ConsultaInformacionCliente01
+        component: TX067050
+        backend: "00045"

@@ -1,0 +1,140 @@
+<div class="row no-gutters">
+  <section
+    class="section-form container container-template d-flex justify-content-center"
+  >
+    <div style="width: 500px" class="d-flex flex-column gap-3">
+      <pichincha-typography
+        variant="prelo-slab"
+        color="bp-primary-blue500"
+        weight="400"
+        size="32px"
+        line-height="40px"
+        decoration="none"
+        category="h1"
+      >
+        Editar Cuenta
+      </pichincha-typography>
+
+      <!-- Success Modal -->
+      <div *ngIf="successMessage" class="modal-overlay">
+        <div class="success-modal">
+          <div class="modal-header">
+            <h4>✅ Éxito</h4>
+          </div>
+          <div class="modal-body">
+            <p>{{ successMessage }}</p>
+          </div>
+          <div class="modal-footer">
+            <pichincha-button
+              (clickEvent)="navigateListPage()"
+              size="medium"
+              label="Ir al listado"
+            ></pichincha-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <form
+        id="editAccountForm"
+        class="d-flex flex-column gap-3"
+        [formGroup]="editForm"
+      >
+        <!--#region Account Number (Read-only) -->
+        <pichincha-input
+          id="inputAccountNumber"
+          label="Número de Cuenta"
+          formControlName="accountNumber"
+          placeholder="Número de cuenta"
+          inputType="text"
+          [disabled]="true"
+        ></pichincha-input>
+        <!--#endregion-->
+
+        <!--#region Account Type (Read-only) -->
+        <div class="form-group">
+          <label for="accountTypeId">Tipo de Cuenta</label>
+          <select 
+            id="accountTypeId"
+            class="form-control"
+            formControlName="accountTypeId"
+            [disabled]="true"
+          >
+            <option value="" disabled>Seleccione el tipo de cuenta</option>
+            <option *ngFor="let type of accountTypes" [value]="type.id">
+              {{ type.description }}
+            </option>
+          </select>
+        </div>
+        <!--#endregion-->
+
+        <!--#region Initial Balance (Editable) -->
+        <pichincha-input
+          label="Saldo Inicial"
+          formControlName="initialBalance"
+          placeholder="Ej: 1000.50"
+          inputType="number"
+          step="0.01"
+          min="0"
+          state="{{ editForm.get('initialBalance')?.invalid && editForm.get('initialBalance')?.touched ? 'error' : undefined }}"
+          errorHelper="Campo requerido (debe ser mayor o igual a 0)"
+        ></pichincha-input>
+        <!--#endregion-->
+
+        <!--#region Customer (Read-only) -->
+        <pichincha-input
+          id="inputCustomerName"
+          label="Cliente"
+          formControlName="customerName"
+          placeholder="Nombre del cliente"
+          inputType="text"
+          [disabled]="true"
+        ></pichincha-input>
+        <!--#endregion-->
+
+        <!--#region Status (Editable) -->
+        <div class="form-group">
+          <label for="status">Estado</label>
+          <select 
+            id="status"
+            class="form-control"
+            formControlName="status"
+            [class.is-invalid]="editForm.get('status')?.invalid && editForm.get('status')?.touched"
+          >
+            <option value="" disabled>Seleccione el estado</option>
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+          <div *ngIf="editForm.get('status')?.invalid && editForm.get('status')?.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+        <!--#endregion-->
+
+        <div class="w-100 d-flex justify-content-end mt-3 gap-10">
+          <pichincha-button
+            (clickEvent)="resetForm()"
+            type="button"
+            size="large"
+            variant="secondary"
+            customWidth="200px"
+            label="Cancelar"
+          ></pichincha-button>
+          
+          <pichincha-button
+            (clickEvent)="onSubmit()"
+            type="button"
+            size="large"
+            customWidth="200px"
+            label="Editar Cuenta"
+            [disabled]="!editForm.valid || isLoading"
+          ></pichincha-button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

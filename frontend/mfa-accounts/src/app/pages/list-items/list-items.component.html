@@ -1,0 +1,159 @@
+<div class="container">
+  <pichincha-typography
+    variant="prelo-slab"
+    color="bp-primary-blue500"
+    weight="400"
+    size="32px"
+    line-height="40px"
+    decoration="none"
+    category="h1"
+  >
+    Listado de Cuentas
+  </pichincha-typography>
+
+  <!-- Confirmation Modal -->
+  <div *ngIf="showConfirmModal" class="modal-overlay" (click)="cancelDelete()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4 style="color: #ffc107;">⚠️ Confirmación</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro que desea eliminar esta cuenta?</p>
+      </div>
+      <div class="modal-footer">
+        <pichincha-button
+          (clickEvent)="cancelDelete()"
+          size="medium"
+          variant="secondary"
+          label="No"
+          [disabled]="isDeleting"
+        ></pichincha-button>
+        <pichincha-button
+          (clickEvent)="confirmDelete()"
+          size="medium"
+          variant="primary"
+          label="Sí"
+          [disabled]="isDeleting"
+        ></pichincha-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div *ngIf="showSuccessModal" class="modal-overlay" (click)="closeSuccessModal()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4 style="color: #28a745;">✅ Éxito</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ modalMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <pichincha-button
+          (clickEvent)="closeSuccessModal()"
+          size="medium"
+          label="Aceptar"
+        ></pichincha-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div *ngIf="showErrorModal" class="modal-overlay" (click)="closeErrorModal()">
+    <div class="error-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4 style="color: #dc3545;">❌ Error</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ modalMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <pichincha-button
+          (clickEvent)="closeErrorModal()"
+          size="medium"
+          label="Aceptar"
+        ></pichincha-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Accounts Modal -->
+  <div *ngIf="showNoAccountsModal" class="modal-overlay" (click)="closeNoAccountsModal()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h4 style="color: #17a2b8;">ℹ️ Información</h4>
+      </div>
+      <div class="modal-body">
+        <p>No existen cuentas por mostrar</p>
+      </div>
+      <div class="modal-footer">
+        <pichincha-button
+          (clickEvent)="closeNoAccountsModal()"
+          size="medium"
+          label="Aceptar"
+        ></pichincha-button>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="d-flex justify-content-end">
+      <pichincha-button
+        size="large"
+        id="button"
+        (clickEvent)="newItem()"
+        customWidth="200px"
+        label="Nueva Cuenta"
+        [disabled]="newAccountButtonDisabled"
+      ></pichincha-button>
+    </div>
+
+    <div class="container-table mt-4">
+      <pichincha-table
+        size-start="10"
+        [headers]="tableHeaders"
+        [actions]="tableActions"
+        [rows]="itemss"
+      ></pichincha-table>
+      
+      <!-- Pagination Controls -->
+      <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="totalPages > 1">
+        <div>
+          <pichincha-typography
+            variant="roboto"
+            size="14px"
+            color="bp-neutral-gray600"
+          >
+            Mostrando {{ (currentPage * pageSize) + 1 }} - {{ Math.min((currentPage + 1) * pageSize, totalElements) }} de {{ totalElements }} registros
+          </pichincha-typography>
+        </div>
+        
+        <div class="d-flex align-items-center gap-2">
+          <pichincha-button
+            size="small"
+            variant="secondary"
+            label="Anterior"
+            [disabled]="currentPage === 0"
+            (clickEvent)="onPreviousPage()"
+          ></pichincha-button>
+          
+          <pichincha-typography
+            variant="roboto"
+            size="14px"
+            color="bp-neutral-gray700"
+          >
+            Página {{ currentPage + 1 }} de {{ totalPages }}
+          </pichincha-typography>
+          
+          <pichincha-button
+            size="small"
+            variant="secondary"
+            label="Siguiente"
+            [disabled]="currentPage >= totalPages - 1"
+            (clickEvent)="onNextPage()"
+          ></pichincha-button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,18 @@
+[
+  {
+    "scope": "main",
+    "type": "module",
+    "urlResource": "http://localhost:4201/remoteEntry.js",
+    "exposedModule": "./angularMFE",
+    "guards": ["auth"],
+    "layout": "dashboard"
+  },
+  {
+    "scope": "user",
+    "type": "module",
+    "urlResource": "http://localhost:4202/remoteEntry.js",
+    "exposedModule": "./userMFE",
+    "guards": ["auth"],
+    "layout": "fullpage-header"
+  }
+]

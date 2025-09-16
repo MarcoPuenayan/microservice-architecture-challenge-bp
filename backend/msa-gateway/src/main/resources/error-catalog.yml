@@ -1,0 +1,110 @@
+methodArgumentNotValidException:
+  statusCode: '400'
+  title: Your request parameters didn't validate.
+  detail: Invalid request content.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+missingRequestHeaderException:
+  statusCode: '400'
+  title: Your request parameters didn't validate.
+  detail: Missing required headers.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+httpMessageNotReadableException:
+  statusCode: '400'
+  title: Your request parameters didn't validate.
+  detail: Invalid request content.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+notParameterizedException:
+  statusCode: '500'
+  title: Internal error.
+  detail: Internal error in service.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+connectExceptionClient:
+  statusCode: '500'
+  title: Connection refused.
+  detail: The server is not ready to handle the request.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+notFoundException:
+  statusCode: '404'
+  title: Resource not found.
+  detail: Resource not found in the service.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+unauthorizedException:
+  statusCode: '401'
+  title: Unauthorized.
+  detail: Unauthorized to this service.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+forbiddenException:
+  statusCode: '403'
+  title: Forbidden.
+  detail: Access is permanently prohibited.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+badRequestException:
+  statusCode: '400'
+  title: Your request parameters didn't validate.
+  detail: Invalid request content.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+internalServerException:
+  statusCode: '500'
+  title: Internal error.
+  detail: Internal server error in service.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:
+methodNotAllowedException:
+  statusCode: '405'
+  title: Internal error.
+  detail: Internal server error in service.
+  type:
+  resource:
+  backend:
+  component:
+  instance:
+  errors:

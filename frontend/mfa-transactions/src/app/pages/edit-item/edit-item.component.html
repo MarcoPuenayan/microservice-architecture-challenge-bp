@@ -1,0 +1,248 @@
+<div class="row no-gutters">
+  <section
+    class="section-form container container-template d-flex justify-content-center"
+  >
+    <form
+      id="registerTransactionForm"
+      style="width: 500px"
+      class="d-flex flex-column gap-3"
+      [formGroup]="registerForm"
+    >
+      <pichincha-typography
+        variant="prelo-slab"
+        color="bp-primary-blue500"
+        weight="400"
+        size="32px"
+        line-height="40px"
+        decoration="none"
+        category="h1"
+      >
+        {{ isEditMode ? 'Editar Transacción' : 'Crear Transacción' }}
+      </pichincha-typography>
+
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mb-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <pichincha-typography
+          variant="text"
+          color="bp-red-600"
+          weight="400"
+          size="14px"
+          line-height="20px"
+          category="span"
+        >
+          {{ errorMessage }}
+        </pichincha-typography>
+      </div>
+
+      <!--#region Account Number -->
+      <div class="mb-3">
+        <pichincha-typography
+          variant="text"
+          color="bp-neutral-gray700"
+          weight="400"
+          size="14px"
+          line-height="20px"
+          category="label"
+          class="mb-2"
+        >
+          Número Cuenta *
+        </pichincha-typography>
+        <ng-container *ngIf="!isEditMode">
+          <select
+            class="form-select"
+            formControlName="accountNumber"
+            [class.is-invalid]="accountNumber.invalid && accountNumber.touched"
+          >
+            <option value="">Seleccionar cuenta</option>
+            <option 
+              *ngFor="let account of filteredAccounts" 
+              [value]="account.accountNumber"
+            >
+              {{ account.accountNumber }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-container *ngIf="isEditMode">
+          <input
+            type="text"
+            class="form-control"
+            [value]="currentTransaction?.accountNumber + (accountInfo ? ' - ' + accountInfo.accountDescription : '')"
+            readonly
+          />
+        </ng-container>
+        <div 
+          *ngIf="accountNumber.invalid && accountNumber.touched" 
+          class="invalid-feedback"
+        >
+          Campo requerido
+        </div>
+      </div>
+      <!--#endregion-->
+
+      <!--#region Transaction Type -->
+      <div class="mb-3">
+        <pichincha-typography
+          variant="text"
+          color="bp-neutral-gray700"
+          weight="400"
+          size="14px"
+          line-height="20px"
+          category="label"
+          class="mb-2"
+        >
+          Tipo *
+        </pichincha-typography>
+        <select
+          class="form-select"
+          formControlName="transactionTypeId"
+          [class.is-invalid]="transactionTypeId.invalid && transactionTypeId.touched"
+          [disabled]="isEditMode"
+        >
+          <option value="">Seleccionar tipo</option>
+          <option 
+            *ngFor="let type of transactionTypes" 
+            [value]="type.id"
+          >
+            {{ type.description }}
+          </option>
+        </select>
+        <div 
+          *ngIf="transactionTypeId.invalid && transactionTypeId.touched" 
+          class="invalid-feedback"
+        >
+          Campo requerido
+        </div>
+      </div>
+      <!--#endregion-->
+
+      <!--#region Transaction Value -->
+      <pichincha-input
+        label="Valor de transacción *"
+        formControlName="transactionValue"
+        placeholder="Ej: 50.00"
+        type="number"
+        [disabled]="isEditMode"
+        state="{{ transactionValue.invalid && transactionValue.touched ? 'error' : undefined }}"
+        errorHelper="Campo requerido. Debe ser mayor a 0"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Balance (only in edit mode) -->
+      <div *ngIf="isEditMode" class="mb-3">
+        <pichincha-input
+          label="Saldo Inicial *"
+          formControlName="balance"
+          type="number"
+          placeholder="Ej: 2000.00"
+          state="{{ balance.invalid && balance.touched ? 'error' : undefined }}"
+          errorHelper="Campo requerido. Debe ser mayor o igual a 0"
+        ></pichincha-input>
+      </div>
+      <!--#endregion-->
+
+      <!--#region Transaction Date -->
+      <pichincha-input
+        label="Fecha transacción *"
+        formControlName="transactionDate"
+        type="datetime-local"
+        [disabled]="isEditMode"
+        state="{{ transactionDate.invalid && transactionDate.touched ? 'error' : undefined }}"
+        errorHelper="Campo requerido"
+      ></pichincha-input>
+      <!--#endregion-->
+
+      <!--#region Status (only in edit mode) -->
+      <div *ngIf="isEditMode" class="mb-3">
+        <pichincha-typography
+          variant="text"
+          color="bp-neutral-gray700"
+          weight="400"
+          size="14px"
+          line-height="20px"
+          category="label"
+          class="mb-2"
+        >
+          Estado *
+        </pichincha-typography>
+        <select
+          class="form-select"
+          formControlName="status"
+          [class.is-invalid]="status.invalid && status.touched"
+        >
+          <option value="">Seleccionar estado</option>
+          <option [value]="true">Activo</option>
+          <option [value]="false">Inactivo</option>
+        </select>
+        <div 
+          *ngIf="status.invalid && status.touched" 
+          class="invalid-feedback"
+        >
+          Campo requerido
+        </div>
+      </div>
+      <!--#endregion-->
+
+      <div class="w-100 d-flex justify-content-end mt-3 gap-10">
+        <pichincha-button
+          (clickEvent)="resetForm()"
+          size="large"
+          variant="secondary"
+          customWidth="200px"
+          label="Cancelar"
+        ></pichincha-button>
+        <pichincha-button
+          (clickEvent)="onSubmit()"
+          size="large"
+          customWidth="200px"
+          label="{{ isEditMode ? 'Editar Transacción' : 'Crear Transacción' }}"
+        ></pichincha-button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Success Modal -->
+  <div 
+    *ngIf="showSuccessModal" 
+    class="modal fade show d-block" 
+    style="background-color: rgba(0,0,0,0.5);"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <pichincha-typography
+            variant="prelo-slab"
+            color="bp-primary-blue500"
+            weight="600"
+            size="20px"
+            line-height="28px"
+            category="h5"
+          >
+            Éxito
+          </pichincha-typography>
+        </div>
+        <div class="modal-body pt-2">
+          <pichincha-typography
+            variant="text"
+            color="bp-neutral-gray900"
+            weight="400"
+            size="16px"
+            line-height="24px"
+            category="p"
+          >
+            {{ isEditMode ? 'Transacción editada correctamente' : 'Transacción creada correctamente' }}
+          </pichincha-typography>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <pichincha-button
+            (clickEvent)="onSuccessModalClose()"
+            size="medium"
+            variant="primary"
+            label="Aceptar"
+          ></pichincha-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

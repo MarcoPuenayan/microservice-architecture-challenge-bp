@@ -1,0 +1,26 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: row;
+  overflow-y: hidden;
+
+  &__sidebar {
+    overflow-y: hidden;
+  }
+
+  &__content {
+    flex: 1;
+    margin-top: 72px;
+    max-width: calc(100% - 244px);
+    max-height: calc(100vh - 72px);
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__content-wrapper {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+  }
+}

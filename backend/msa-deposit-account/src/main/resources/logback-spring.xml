@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <!-- Cargar perfil de Spring Boot -->
+    <springProperty name="springProfile" source="spring.profiles.active" defaultValue="default"/>
+
+    <!-- Appender para consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [%X{traceId}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender para archivo en dev (JSON) -->
+    <appender name="FILE_DEV" class="ch.qos.logback.core.FileAppender">
+        <file>logs/dev-app.log</file>
+        <append>true</append>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>traceId</includeMdcKeyName>
+        </encoder>
+    </appender>
+
+    <!-- Appender para archivo en prod (JSON) -->
+    <appender name="FILE_PROD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/prod-app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/prod-app-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>traceId</includeMdcKeyName>
+        </encoder>
+    </appender>
+
+    <!-- Logging para perfil DEV -->
+    <springProfile name="development">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE_DEV"/>
+        </root>
+    </springProfile>
+
+    <!-- Logging para perfil PROD -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE_PROD"/>
+        </root>
+    </springProfile>
+
+</configuration>

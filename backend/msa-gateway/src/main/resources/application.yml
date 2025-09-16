@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: msa-gateway
+  header:
+    channel: digital
+    medium: web
+ 
+
+ 
+
+
+
+
+

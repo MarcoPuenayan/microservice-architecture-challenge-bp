@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: API Domain - Api Gateway V1
+  description:
+    <sup>Api Gateway.<br>
+    <br>
+    <img width="200" align="left" src="https://bancopichincha-developer.apigee.io/files/Logo-Arq-de-Integracioon-BPlogo.png"/>
+  contact:
+    name: Banco Pichincha
+    url: https://pichincha.atlassian.net/jira/software/c/projects/PRYCSPF/boards/2369
+    email: sanalmei@pichincha.com
+  version: 1.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Banco-Pichincha7/cyf-msa-dm-frdi-gateway/1.0.0
+  - url: https://*.apps.ocpdev.uiotest.bpichinchatest.test
+    description: Ambiente de desarrollo.
+  - url: https://*.apps.ocptest.uiotest.bpichinchatest.test
+    description: Ambiente de pruebas.
+  - url: https://*.apps.ocp.bpichincha.com
+    description: Ambiente de producción.
+
+paths:
+  /domain/gateway/v1:
+    get:
+      responses:
+        "200":
+          description: Ok
+  

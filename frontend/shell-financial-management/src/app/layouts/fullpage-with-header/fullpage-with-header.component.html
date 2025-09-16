@@ -1,0 +1,21 @@
+<app-header
+  [loggedUser]="{
+    name: 'User',
+    lastName: 'Generic',
+  }"
+></app-header>
+<div class="fullpage-layout">
+  <div class="fullpage-layout__content">
+    <div class="fullpage-layout__content-wrapper">
+      <router-outlet></router-outlet>
+
+      <!-- 
+      *** En caso de tener configurado un microfrontend de tipo Web Component, se deben definir las etiquetas de los componentes que se desean renderizar en el espacio corrrespondiente ***
+      
+      <mfe-element-list></mfe-element-list>
+      <mfe-element-edit></mfe-element-edit> 
+      -->
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

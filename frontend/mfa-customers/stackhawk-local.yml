@@ -1,0 +1,43 @@
+##############################################
+############ DATOS OBLIGATORIOS ##############
+##############################################
+
+app:
+  applicationId: 935a-4c10-9a2f-342d6e1b6de9 # (required) Colocar el ID del proyecto a escanear Ejemplo: 935a-4c10-9a2f-342d6e1b6de9.
+  env: Development # (required)  para Desarrollo: Development | Para QA: Pre-Production
+  host: http://localhost:8080 # (required)  # Colocar el link del Ambiente ya levantado, a nivel Local o Pre-Producción
+
+
+##############################################
+######## Colocar Paths del proyecto ##########
+##############################################
+
+# hawk:
+#   spider:   
+#     seedPaths:
+#       - /customer
+
+
+##############################################
+############ DATOS OPCIONALES ################
+##############################################
+
+##############################################
+####### Opcional: Colocar Cabeceras ##########
+##############################################
+
+# hawkAddOn: # Cabeceras de la petición (Headers)
+#   replacer:
+#     rules:      
+#       #Ejemplo 1
+#       - matchString: "x-app"
+#         replacement: "x-app"
+#         replaceOnly: false      
+#       #Ejemplo 2
+#       - matchString: "x-guid"
+#         replacement: "x-guid"
+#         replaceOnly: false
+#       #Ejemplo 3
+#       - matchString: "Authorization"
+#         replacement: "Bearer TOKEN"
+#         replaceOnly: false

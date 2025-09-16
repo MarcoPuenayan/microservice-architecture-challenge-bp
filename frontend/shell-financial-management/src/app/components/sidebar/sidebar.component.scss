@@ -1,0 +1,12 @@
+.sidebar {
+  position: relative;
+  width: 280px;
+  max-height: calc(100vh - 160px);
+
+  &__content {
+    position: absolute;
+    width: 280px;
+    top: 84px;
+    z-index: 1;
+  }
+}

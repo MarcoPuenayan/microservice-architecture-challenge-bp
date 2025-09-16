@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+domain:
+  name: domain
+  url: http://192.168.100.58:8081
+
+# Configuración de autenticación Keycloak
+keycloak:
+  auth:
+    token-url: http://localhost:9595/realms/bp-project/protocol/openid-connect/token
+    grant-type: password
+    client-id: bp-authentication
+    client-secret: PQhR0aW2g4WPVmE4frs3BwmGwtSgh5KI
+    username: mpuenaya
+    password: 123qwe
+    refresh-threshold-seconds: 30

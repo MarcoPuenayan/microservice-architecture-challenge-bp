@@ -1,0 +1,15 @@
+{
+  "include": [
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": ["jest"]
+  },
+  "exclude": [
+    "src/test.ts",
+    "src/**/*.spec.ts",
+    "src/environments/*",
+    "src/app/file-to-exclude.ts"
+  ]
+}

@@ -1,0 +1,26 @@
+<app-header
+  [loggedUser]="
+    (loggedUser$ | async) || { name: 'Usuario', lastName: 'Genérico' }
+  "
+  (onClickCloseSession)="handleLogout()"
+></app-header>
+<div class="dashboard-layout">
+  <app-sidebar
+    [menuItems]="menuItems"
+    (onClickItemSidebar)="handleClickMenuItem($event)"
+    class="dashboard-layout__sidebar"
+  ></app-sidebar>
+  <div class="dashboard-layout__content">
+    <div class="dashboard-layout__content-wrapper">
+      <router-outlet></router-outlet>
+
+      <!-- 
+      *** En caso de tener configurado un microfrontend de tipo Web Component, se deben definir las etiquetas de los componentes que se desean renderizar en el espacio corrrespondiente ***
+      
+      <mfe-element-list></mfe-element-list>
+      <mfe-element-edit></mfe-element-edit> 
+      -->
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

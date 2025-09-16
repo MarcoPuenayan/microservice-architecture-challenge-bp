@@ -1,0 +1,155 @@
+<div class="login-page">
+  <div class="login-layout" role="main">
+  <!-- Hero / Left Panel -->
+  <section class="hero-panel" aria-hidden="false">
+    <div class="hero-overlay">
+      <div class="hero-brand">
+        <img src="assets/logo-bp.svg" alt="Banco Pichincha" class="hero-logo" />
+      </div>
+      <div class="hero-content">
+        <h2 class="hero-pretitle">¡Nos alegra verte!</h2>
+        <h1 class="hero-title">BIENVENIDO DE NUEVO</h1>
+        <hr class="hero-divider" aria-hidden="true" />
+        <p class="hero-text">
+          Accede a tu panel para gestionar cuentas, clientes y transacciones de forma
+          más rápida, segura y centralizada.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form / Right Panel -->
+  <section class="form-panel" aria-labelledby="loginTitle" aria-describedby="loginSubtitle">
+    <div class="form-wrapper">
+      <header class="form-header">
+        <h1 id="loginTitle" class="form-title">Iniciar Sesión</h1>
+        <p id="loginSubtitle" class="form-subtitle">
+          Ingresa tus credenciales para continuar
+        </p>
+      </header>
+
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        class="login-form"
+        novalidate
+        aria-describedby="formErrors"
+      >
+        <!-- Global Error Message -->
+        <div
+          #generalError
+          id="formErrors"
+          class="alert alert--error"
+          *ngIf="errorMessage"
+          tabindex="-1"
+          role="alert"
+          aria-live="assertive"
+        >
+          <span class="alert__text">{{ errorMessage }}</span>
+        </div>
+
+        <!-- Username Field -->
+        <div class="form-group accent-field">
+          <label for="username" class="form-label">Usuario</label>
+          <div class="input-shell">
+            <input
+              #usernameInput
+              id="username"
+              type="text"
+              formControlName="username"
+              class="form-input"
+              [attr.aria-invalid]="username?.invalid && (username?.touched || username?.dirty)"
+              [attr.aria-required]="true"
+              [attr.aria-describedby]="
+                (hasError('username','required') || hasError('username','minlength')) ? 'usernameError' : null
+              "
+              [class.form-input--error]="
+                hasError('username', 'required') || hasError('username', 'minlength')
+              "
+              placeholder="Correo o usuario"
+              autocomplete="username"
+              inputmode="text"
+            />
+          </div>
+          <div
+            id="usernameError"
+            class="form-error"
+            *ngIf="hasError('username', 'required') || hasError('username', 'minlength')"
+          >
+            <ng-container *ngIf="hasError('username','required')">
+              El usuario es requerido
+            </ng-container>
+            <ng-container *ngIf="hasError('username','minlength')">
+              Debe tener al menos 3 caracteres
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Password Field with toggle -->
+        <div class="form-group password-group accent-field">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="password-wrapper input-shell">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              class="form-input"
+              [attr.aria-invalid]="password?.invalid && (password?.touched || password?.dirty)"
+              [attr.aria-required]="true"
+              [attr.aria-describedby]="
+                (hasError('password','required') || hasError('password','minlength')) ? 'passwordError' : null
+              "
+              [class.form-input--error]="
+                hasError('password', 'required') || hasError('password', 'minlength')
+              "
+              placeholder="Contraseña"
+              autocomplete="current-password"
+            />
+            
+          </div>
+          <div
+            id="passwordError"
+            class="form-error"
+            *ngIf="hasError('password', 'required') || hasError('password', 'minlength')"
+          >
+            <ng-container *ngIf="hasError('password','required')">
+              La contraseña es requerida
+            </ng-container>
+            <ng-container *ngIf="hasError('password','minlength')">
+              Debe tener al menos 6 caracteres
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Remember Me and Forgot Password Row -->
+        <div class="login-extra-row">
+          <label class="remember-me">
+            <input type="checkbox" formControlName="rememberMe" />
+            <span>Recordarme</span>
+          </label>
+          <a class="forgot-password" href="javascript:void(0)" (click)="$event.preventDefault()" aria-disabled="true">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn--primary btn--full-width submit-btn"
+          [disabled]="!loginForm.valid || isLoading"
+          [attr.aria-busy]="isLoading"
+        >
+          <span *ngIf="!isLoading">Ingresar</span>
+          <span *ngIf="isLoading" class="loading-spinner">
+            <span class="spinner" aria-hidden="true"></span>
+            Procesando...
+          </span>
+        </button>
+      </form>
+      <footer class="login-footer" aria-hidden="true">
+        <span>Diseño adaptado — Banco Pichincha</span>
+      </footer>
+    </div>
+  </section>
+  </div>
+</div>
