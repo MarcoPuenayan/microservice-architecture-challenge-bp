@@ -1,0 +1,55 @@
+@startuml Architecture Containers
+!define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
+!includeurl C4P/C4_Context.puml
+!includeurl C4P/C4_Container.puml
+
+LAYOUT_TOP_DOWN()
+
+Person(user, "Usuario", "Cliente Web usando navegador")
+System_Boundary(app, "Financial Management Platform") {
+    Container(shell, "Shell Microfrontend", "Angular", "Orquesta microfrontends y routing")
+    Container(mfeAcc, "MF Accounts", "Angular", "Gestión visual de cuentas")
+    Container(mfeCust, "MF Customers", "Angular", "Gestión de clientes")
+    Container(mfeTxn, "MF Transactions", "Angular", "Gestión de transacciones")
+    Container_Boundary(edge, "Edge Layer") {
+        Container(gw, "msa-gateway", "Spring Boot", "API Gateway / routing / filtros / seguridad")
+    }
+    Container(discovery, "msa-eureka", "Spring Boot", "Service discovery registry")
+    Container(security, "Keycloak", "Java", "OAuth2 / OIDC / emisión JWT")
+    ContainerDb(db, "PostgreSQL", "DB", "Persistencia relacional")
+    Container(cache, "Redis", "Cache", "Cache TTL y aceleración lecturas")
+    Container(queue, "RabbitMQ (opcional)", "AMQP Broker", "Mensajería interna")
+    Container_Ext(kafka, "Kafka (Confluent Cloud)", "Event Streaming", "Plataforma externa de eventos")
+    Container(svcTxn, "msa-account-transaction", "Spring Boot", "Transacciones de cuenta")
+    Container(svcDep, "msa-deposit-account", "Spring Boot", "Operaciones de cuentas depósito")
+    Container(svcCust, "msa-customer-profiles", "Spring Boot", "Perfiles de clientes")
+}
+
+Rel(user, shell, "Usa")
+Rel(shell, mfeAcc, "Carga módulo")
+Rel(shell, mfeCust, "Carga módulo")
+Rel(shell, mfeTxn, "Carga módulo")
+Rel(shell, gw, "HTTP (REST)")
+Rel(gw, svcTxn, "Rutea REST")
+Rel(gw, svcDep, "Rutea REST")
+Rel(gw, svcCust, "Rutea REST")
+Rel(svcTxn, discovery, "Registra / consulta")
+Rel(svcDep, discovery, "Registra / consulta")
+Rel(svcCust, discovery, "Registra / consulta")
+Rel(gw, discovery, "Consulta servicios")
+Rel(shell, security, "Autenticación / tokens")
+Rel(gw, security, "Validación JWT")
+Rel(svcTxn, security, "Validación JWT")
+Rel(svcDep, security, "Validación JWT")
+Rel(svcCust, security, "Validación JWT")
+Rel(svcTxn, db, "CRUD")
+Rel(svcDep, db, "CRUD")
+Rel(svcCust, db, "CRUD")
+Rel(svcTxn, cache, "Lectura/Escritura")
+Rel(svcDep, cache, "Lectura/Escritura (si aplica)")
+Rel(svcDep, queue, "Publica/Consume (opcional)")
+Rel(svcTxn, kafka, "Produce eventos (opcional)")
+Rel(svcDep, kafka, "Produce eventos (opcional)")
+
+SHOW_LEGEND()
+@enduml

@@ -1,0 +1,82 @@
+%% Mermaid: Container-Level Architecture
+
+flowchart LR
+    subgraph Client
+        User[Usuario Web]
+        Browser[Browser / MF Shell]
+    end
+
+    subgraph Frontend
+        Shell[Shell Microfrontend]
+        MFE_Accounts[MF Accounts]
+        MFE_Customers[MF Customers]
+        MFE_Transactions[MF Transactions]
+    end
+
+    subgraph Edge
+        APIGateway[(msa-gateway)]
+    end
+
+    subgraph Service_Discovery
+        Eureka[(msa-eureka)]
+    end
+
+    subgraph Security
+        Keycloak[(Keycloak Auth Server)]
+    end
+
+    subgraph Backend_Microservices
+        svcAccountTxn[msa-account-transaction]
+        svcDeposit[msa-deposit-account]
+        svcCustomer[msa-customer-profiles]
+    end
+
+    subgraph Data_Layer
+        Postgres[(PostgreSQL)]
+        Redis[(Redis Cache)]
+        Rabbit[RabbitMQ opcional]
+    end
+
+    subgraph External_Services
+        Kafka[Confluent Cloud Kafka externo]
+    end
+
+    User --> Browser --> Shell
+    Shell --> MFE_Accounts
+    Shell --> MFE_Customers
+    Shell --> MFE_Transactions
+
+    MFE_Accounts --> APIGateway
+    MFE_Customers --> APIGateway
+    MFE_Transactions --> APIGateway
+
+    APIGateway --> svcAccountTxn
+    APIGateway --> svcDeposit
+    APIGateway --> svcCustomer
+
+    svcAccountTxn --> Eureka
+    svcDeposit --> Eureka
+    svcCustomer --> Eureka
+
+    APIGateway --> Eureka
+
+    Shell --> Keycloak
+    APIGateway --> Keycloak
+    svcAccountTxn --> Keycloak
+    svcDeposit --> Keycloak
+    svcCustomer --> Keycloak
+
+    svcAccountTxn --> Postgres
+    svcDeposit --> Postgres
+    svcCustomer --> Postgres
+
+    svcAccountTxn --> Redis
+    svcDeposit --> Redis
+
+    svcAccountTxn -. events .-> Kafka
+    svcDeposit -. events .-> Kafka
+
+    svcDeposit --> Rabbit
+
+    classDef optional stroke-dasharray: 3 3;
+    class Rabbit,Kafka optional;

@@ -1,0 +1,31 @@
+%% Mermaid Sequence: Flujo de petición autenticada con cache
+sequenceDiagram
+    autonumber
+    participant U as Usuario
+    participant FE as Shell / MFE
+    participant KC as Keycloak
+    participant GW as API Gateway
+    participant TX as msa-account-transaction
+    participant R as Redis
+    participant DB as PostgreSQL
+
+    U->>FE: Navega y solicita datos de transacciones
+    FE->>KC: Solicita token (Resource Owner Password / Auth Code)
+    KC-->>FE: JWT Access Token
+    FE->>GW: GET /transactions (Authorization: Bearer token)
+    GW->>KC: Valida firma/claims JWT
+    KC-->>GW: OK (claims válidos)
+    GW->>TX: Reenvía request enriquecida
+    TX->>R: Consulta cache por clave
+    alt Cache HIT
+        R-->>TX: Datos cacheados
+        TX-->>GW: Respuesta OK (cached)
+        GW-->>FE: Payload JSON
+    else Cache MISS
+        R-->>TX: (no existe)
+        TX->>DB: SELECT ...
+        DB-->>TX: Resultset
+        TX->>R: Escribe en cache (TTL)
+        TX-->>GW: Respuesta OK
+        GW-->>FE: Payload JSON
+    end
