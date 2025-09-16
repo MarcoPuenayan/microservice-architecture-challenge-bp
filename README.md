@@ -38,6 +38,14 @@ Diagrama lógico simplificado:
                                                         |-- External Integrations (Feign clients)
 ```
 
+Vista gráfica detallada:
+
+![Arquitectura General](docs/diagram.png)
+
+Nota: Si la imagen aún no existe, puede generarse a partir de los diagramas en `docs/`:
+- `architecture.mmd` (Mermaid) -> render directo en GitHub / VS Code
+- `architecture.puml` (PlantUML) -> `java -jar plantuml.jar docs/architecture.puml` y luego renombrar/copiar la salida a `docs/diagram.png` (o `diagram.svg`).
+
 ## 3. Estructura del Repositorio
 ```
 backend/
